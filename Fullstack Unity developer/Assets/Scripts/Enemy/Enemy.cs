@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace ShootEmUp
 {
-    public sealed class Enemy : MonoBehaviour
+    public sealed class Enemy : MonoBehaviour, IDamageable
     {
         public delegate void FireHandler(Vector2 position, Vector2 direction);
         
@@ -15,8 +16,7 @@ namespace ShootEmUp
         [SerializeField]
         public Transform firePoint;
         
-        [SerializeField]
-        public int health;
+        [SerializeField] public int Health {get; private set;}
 
         [SerializeField]
         public Rigidbody2D _rigidbody;
@@ -45,12 +45,18 @@ namespace ShootEmUp
             this.isPointReached = false;
         }
 
+        public void TakeDamage(int damage)
+        {
+            if (Health > 0)
+                Health = Mathf.Max(0, Health - damage);
+        }
+
         private void FixedUpdate()
         {
             if (this.isPointReached)
             {
                 //Attack:
-                if (this.target.health <= 0)
+                if (this.target.Health <= 0)
                     return;
 
                 this.currentTime -= Time.fixedDeltaTime;

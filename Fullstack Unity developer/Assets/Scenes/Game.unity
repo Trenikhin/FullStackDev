@@ -262,7 +262,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 201757604187811891, guid: 5fe72886874b4e445b06cf777ca4920d, type: 3}
   worldTransform: {fileID: 1290949509}
-  levelBounds: {fileID: 2572952653776768186}
   container: {fileID: 1831741369}
 --- !u!1 &519420028
 GameObject:
@@ -424,7 +423,7 @@ MonoBehaviour:
   worldTransform: {fileID: 1683128698}
   container: {fileID: 178513672}
   prefab: {fileID: 102605417607457000, guid: 87fe189881a524806800482ac8eaaa83, type: 3}
-  _bulletSystem: {fileID: 363245577}
+  _bulletSystem: {fileID: 0}
 --- !u!1 &883274639
 GameObject:
   m_ObjectHideFlags: 0
@@ -787,7 +786,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character: {fileID: 4414282821800802405}
-  bulletManager: {fileID: 363245577}
 --- !u!1 &61006797492197339
 GameObject:
   m_ObjectHideFlags: 0
@@ -1226,6 +1224,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 6799125967610205483, guid: 9699e7e809fd44b2bbf3d30c951ecbd2,
+        type: 3}
+      propertyPath: <Health>k__BackingField
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

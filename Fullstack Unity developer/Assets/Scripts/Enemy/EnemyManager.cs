@@ -27,7 +27,7 @@ namespace ShootEmUp
         private Enemy prefab;
         
         [SerializeField]
-        private BulletManager _bulletSystem;
+        private BulletSpawner _bulletSystem;
         
         private readonly HashSet<Enemy> m_activeEnemies = new();
         private readonly Queue<Enemy> enemyPool = new();
@@ -72,7 +72,7 @@ namespace ShootEmUp
         {
             foreach (Enemy enemy in m_activeEnemies.ToArray())
             {
-                if (enemy.health <= 0)
+                if (enemy.Health <= 0)
                 {
                     enemy.OnFire -= this.OnFire;
                     enemy.transform.SetParent(this.container);
@@ -90,7 +90,6 @@ namespace ShootEmUp
                 Color.red,
                 (int) PhysicsLayer.ENEMY_BULLET,
                 1,
-                false,
                 direction * 2
             );
         }
