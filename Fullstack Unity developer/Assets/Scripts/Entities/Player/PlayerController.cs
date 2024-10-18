@@ -1,7 +1,7 @@
 ﻿namespace ShootEmUp
 {
 	using UnityEngine;
-
+	
 	public class PlayerController : MonoBehaviour
 	{
 		[SerializeField] Player       _player;

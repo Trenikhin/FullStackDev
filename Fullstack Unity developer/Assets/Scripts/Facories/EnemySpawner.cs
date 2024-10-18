@@ -52,7 +52,7 @@ namespace ShootEmUp
 
         void HandleDied()
         {
-            foreach (Enemy enemy in _enemyPool.ActiveObjs.ToArray())
+            foreach (Enemy enemy in _enemyPool.ActiveObjs.ToArray()) // collection could be modified
             {
                 if (enemy.Health.Value <= 0)
                 {

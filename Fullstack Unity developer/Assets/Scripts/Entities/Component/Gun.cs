@@ -21,7 +21,7 @@
 		}
 
 
-		#region IGun
+#region IGun
 
 		public Quaternion FirePointRotation => _firePoint.rotation;
 		public Vector3    Position          => _firePoint.position;

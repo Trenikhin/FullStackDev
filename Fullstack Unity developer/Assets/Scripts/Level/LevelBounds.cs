@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
+    // Didn't touch // Не трогал этот класс
     public sealed class LevelBounds : MonoBehaviour
     {
         [SerializeField]

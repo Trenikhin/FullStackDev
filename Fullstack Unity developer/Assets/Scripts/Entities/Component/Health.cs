@@ -13,8 +13,6 @@
 		
 		public void TakeDamage(int damage)
 		{
-			Debug.Log( $"{gameObject}: {Value}" );
-			
 			if (Value <= 0)
 				return;
 

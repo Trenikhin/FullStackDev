@@ -1,5 +1,6 @@
 ﻿namespace ShootEmUp
 {
+	using System.Linq;
 	using UnityEngine;
 	
 	public class BulletSpawner : MonoBehaviour
@@ -34,7 +35,7 @@
 		
 		void CollectBullets()
 		{
-			foreach (var bullet in _bulletPool.ActiveObjs)
+			foreach (var bullet in _bulletPool.ActiveObjs.ToArray()) // collection could be modified
 				if (!_levelBounds.InBounds(bullet.transform.position))
 					_bulletPool.Return(bullet);
 		}
