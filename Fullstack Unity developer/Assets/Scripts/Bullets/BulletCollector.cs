@@ -14,7 +14,7 @@
 		
 		void CollectBullets()
 		{
-			foreach (var bullet in bulletPool.ActiveBullets)
+			foreach (var bullet in bulletPool.ActiveObjs)
 				if (!levelBounds.InBounds(bullet.transform.position))
 					bulletPool.Return(bullet);
 		}

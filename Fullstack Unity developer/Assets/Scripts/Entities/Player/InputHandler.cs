@@ -10,28 +10,22 @@ namespace ShootEmUp
         bool fireRequired;
         Vector2 moveDirection;
 
-        void Awake()
-        {
-            this.character.OnHealthEmpty += _ => Time.timeScale = 0;
-        }
-
         void Update()
         {
             HandleMove();
-            
-            if ( Input.GetKeyDown( KeyCode.Space ) )
-            {
-                fireRequired = true;   
-            }
+            HandleFire();
         }
 
         void FixedUpdate()
         {
+            // Try Fire
             if (fireRequired)
             {
-               character.Fire();
-               fireRequired = false;
+                character.Fire();
+                fireRequired = false;
             }
+            
+            character.Move( moveDirection );
         }
 
 
@@ -52,8 +46,6 @@ namespace ShootEmUp
                 this.moveDirection = Vector2.right;
             else
                 this.moveDirection = Vector2.zero;
-            
-            character.Move( moveDirection );
         }
     }
 }
