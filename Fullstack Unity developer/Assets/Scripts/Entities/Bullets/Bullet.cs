@@ -1,12 +1,12 @@
-using System;
-using UnityEngine;
-
 namespace ShootEmUp
 {
+    using System;
+    using UnityEngine;
+    
     public sealed class Bullet : MonoBehaviour
     {
-        [SerializeField] Rigidbody2D    rigidbody2D;
-        [SerializeField] SpriteRenderer spriteRenderer;
+        [SerializeField] Rigidbody2D    _rigidbody2D;
+        [SerializeField] SpriteRenderer _spriteRenderer;
         
         int  _damage;
         
@@ -26,11 +26,12 @@ namespace ShootEmUp
         public void Init( int damage, Vector3 pos, Color color, int physicsLayer, Vector2 velocity )
         {
             _damage   = damage;
+
+            _spriteRenderer.color = color;
+            _rigidbody2D.velocity = velocity;
             
-            transform.position   = pos;
-            spriteRenderer.color = color;
-            gameObject.layer     = physicsLayer;
-            rigidbody2D.velocity = velocity;
+            transform.position    = pos;
+            gameObject.layer      = physicsLayer;
         }
 
 #endregion

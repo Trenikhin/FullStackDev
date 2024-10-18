@@ -13,6 +13,9 @@ GameObject:
   - component: {fileID: 5568771391735819375}
   - component: {fileID: 659620479434099170}
   - component: {fileID: 102605417607457000}
+  - component: {fileID: 813269080783197423}
+  - component: {fileID: 3576128833153627085}
+  - component: {fileID: 4548122199853567318}
   m_Layer: 11
   m_Name: Enemy
   m_TagString: Untagged
@@ -162,12 +165,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e09a324f54d94d6e84681731f36566c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlayer: 0
-  firePoint: {fileID: 3195880656587174614}
-  health: 3
+  _health: {fileID: 3576128833153627085}
+  _mover: {fileID: 813269080783197423}
+  _gun: {fileID: 4548122199853567318}
+  _countdown: 1
+--- !u!114 &813269080783197423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559606060570185700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0af5b700e1547d980408613eb5b09c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _rigidbody: {fileID: 659620479434099170}
-  speed: 3
-  countdown: 1
+  _speed: 5
+--- !u!114 &3576128833153627085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559606060570185700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38303f938c1e42278c8b69229eb6e384, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Value>k__BackingField: 20
+--- !u!114 &4548122199853567318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559606060570185700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b6a71cf6ed9429ca074229572c465e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _damage: 1
+  _physicsLayer: 13
+  _firePoint: {fileID: 3195880656587174614}
+  _color: {r: 1, g: 0, b: 0.2573738, a: 1}
 --- !u!1 &2239154907127902911
 GameObject:
   m_ObjectHideFlags: 0

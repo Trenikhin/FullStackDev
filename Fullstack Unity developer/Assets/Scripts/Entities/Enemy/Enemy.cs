@@ -1,93 +1,76 @@
-using System;
-using UnityEngine;
-using UnityEngine.Serialization;
-
 namespace ShootEmUp
 {
-    public sealed class Enemy : MonoBehaviour, IDamageable
+    using UnityEngine;
+    
+    public sealed class Enemy : MonoBehaviour
     {
-        public delegate void FireHandler(Vector2 position, Vector2 direction);
+        [SerializeField] Health _health;
+        [SerializeField] Mover  _mover;
+        [SerializeField] Gun    _gun;
         
-        public event FireHandler OnFire;
+        [SerializeField] float         _countdown = 1;
         
-        [SerializeField] public Transform     firePoint;
-        [SerializeField]        Rigidbody2D   _rigidbody;
-        [SerializeField]        float         speed = 5.0f;
-        [SerializeField]        float         countdown;
-        [SerializeField]        BulletSpawner _bulletSystem;
+        Player  _target;
+        Vector2 _destination;
+        float   _currentTime;
+        bool    _isPointReached;
         
-        Player target;
+#region Editor
 
-        Vector2 destination;
-        float currentTime;
-        bool isPointReached;
+        public void Reset() => _currentTime = _countdown;
+
+#endregion
+#region UnityEvents
 
         void FixedUpdate()
         {
-            if (this.isPointReached)
-                Attack();
+            if (_isPointReached)
+                TryAttack();
             else
-                Move();
+                TryMove();
         }
-        
-        [field: SerializeField] public int Health {get; private set;}
+
+#endregion
+#region IEnemy
+
+        public Health Health => _health;
 
         public void Init(Player player, Vector2 endPoint)
         {
-            target              = player;
-            
-            this.destination    = endPoint;
-            this.isPointReached = false;
-        }
-        
-        public void Reset()
-        {
-            this.currentTime = this.countdown;
+            _target         = player;
+            _destination    = endPoint;
+            _isPointReached = false;
         }
 
-        public void TakeDamage(int damage)
-        {
-            if (Health > 0)
-                Health = Mathf.Max(0, Health - damage);
-        }
+#endregion
 
-        void Move()
+        void TryMove()
         {
-            Vector2 vector = this.destination - (Vector2) this.transform.position;
+            Vector2 vector = _destination - (Vector2) transform.position;
             if (vector.magnitude <= 0.25f)
             {
-                this.isPointReached = true;
+                _isPointReached = true;
                 return;
             }
-
-            Vector2 direction    = vector.normalized * Time.fixedDeltaTime;
-            Vector2 nextPosition = _rigidbody.position + direction * speed;
-            _rigidbody.MovePosition(nextPosition);
+            
+            _mover.Move( vector.normalized );
         }
 
-        void Attack()
+        void TryAttack()
         {
-            if (this.target.Health <= 0)
+            if (_target.Health.Value <= 0)
                 return;
 
-            this.currentTime -= Time.fixedDeltaTime;
+            _currentTime -= Time.fixedDeltaTime;
             
-            if (this.currentTime <= 0)
+            if (_currentTime <= 0)
             {
-                Vector2 startPosition = this.firePoint.position;
-                Vector2 vector        = (Vector2) this.target.transform.position - startPosition;
+                Vector2 startPosition = _gun.Position;
+                Vector2 vector        = (Vector2) _target.transform.position - startPosition;
                 Vector2 direction     = vector.normalized;
                 
-                _bulletSystem.SpawnBullet(
-                    startPosition,
-                    Color.red,
-                    (int) PhysicsLayer.ENEMY_BULLET,
-                    1,
-                    direction * 2
-                );
-                
-                    
-                this.currentTime += this.countdown;
+                _gun.Fire( direction * 2 );
+                _currentTime += _countdown;
             }
         }
     }

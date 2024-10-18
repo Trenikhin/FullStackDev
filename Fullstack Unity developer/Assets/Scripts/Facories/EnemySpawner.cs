@@ -1,7 +1,6 @@
 namespace ShootEmUp
 {
     using System.Collections;
-    using System.Collections.Generic;
     using System.Linq;
     using UnityEngine;
     using Random = UnityEngine.Random;
@@ -15,27 +14,22 @@ namespace ShootEmUp
 
         IEnumerator Start()
         {
+            const int maxEnemyCount = 5;
+            int       enemyCount = 0;
+            
             // Spawn enemies
-            while (true)
+            while (enemyCount <= maxEnemyCount)
             {
                 yield return new WaitForSeconds(Random.Range(1, 2));
 
                 Enemy enemy = _enemyPool.Rent();
                 SetupEnemy( enemy );
+
+                enemyCount++;
             }
         }
 
-        void FixedUpdate()
-        {
-            // Handle Enemy Die
-            foreach (Enemy enemy in _enemyPool.ActiveObjs.ToArray())
-            {
-                if (enemy.Health <= 0)
-                {
-                    _enemyPool.Return( enemy );
-                }
-            }
-        }
+        void FixedUpdate() => HandleDied();
 
         
         void SetupEnemy( Enemy enemy )
@@ -53,6 +47,18 @@ namespace ShootEmUp
         {
             int index = Random.Range(0, points.Length);
             return points[index];
+        }
+
+
+        void HandleDied()
+        {
+            foreach (Enemy enemy in _enemyPool.ActiveObjs.ToArray())
+            {
+                if (enemy.Health.Value <= 0)
+                {
+                    _enemyPool.Return( enemy );
+                }
+            }
         }
     }
 }

@@ -4,9 +4,11 @@
 	
 	public class BulletSpawner : MonoBehaviour
 	{
-		[SerializeField] BulletPool _bulletPool;
-	
-		
+		[SerializeField] BulletPool  _bulletPool;
+		[SerializeField] LevelBounds _levelBounds;
+
+		void FixedUpdate() => CollectBullets();
+
 		public void SpawnBullet
 		(
 			Vector2 position,
@@ -28,6 +30,13 @@
 				bullet.OnCollisionEntered -= Return;
 				_bulletPool.Return( bullet );
 			}
+		}
+		
+		void CollectBullets()
+		{
+			foreach (var bullet in _bulletPool.ActiveObjs)
+				if (!_levelBounds.InBounds(bullet.transform.position))
+					_bulletPool.Return(bullet);
 		}
 	}
 }
