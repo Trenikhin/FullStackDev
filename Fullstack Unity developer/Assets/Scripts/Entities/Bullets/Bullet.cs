@@ -15,7 +15,7 @@ namespace ShootEmUp
             if (collision.gameObject.TryGetComponent(out IDamageable entity))
                 entity.TakeDamage( _damage );
             
-            OnCollisionEntered?.Invoke();
+            OnCollisionEntered?.Invoke(); 
         }
 
  #region IBullet

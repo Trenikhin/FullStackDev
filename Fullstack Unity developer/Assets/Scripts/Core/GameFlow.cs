@@ -4,7 +4,7 @@
 	
 	public class GameFlow : MonoBehaviour
 	{
-		[SerializeField] Player _character;
+		[SerializeField] Ship _character;
 
 		void OnEnable()		=> _character.Health.OnHealthEmpty += StopGame;
 		void OnDisable()	=> _character.Health.OnHealthEmpty -= StopGame;

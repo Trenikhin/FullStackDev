@@ -4,22 +4,24 @@
 	
 	public class PlayerController : MonoBehaviour
 	{
-		[SerializeField] Player       _player;
+		[SerializeField] Ship       _playerShip;
 		
 		InputHandler _inputHandler;
 
-		void OnEnable()
+		void Start()
 		{
 			_inputHandler = ServiceLocator.Instance.Get<InputHandler>();
-			
-			_inputHandler.OnAttack += _player.Fire;
-			_inputHandler.OnMove   += _player.Move;
+
+			_inputHandler.OnAttack += Fire;
+			_inputHandler.OnMove   += _playerShip.Move;
+		}
+
+		void OnDestroy()
+		{
+			_inputHandler.OnAttack -= Fire;
+			_inputHandler.OnMove   -= _playerShip.Move;
 		}
 		
-		void OnDisable()
-		{
-			_inputHandler.OnAttack -= _player.Fire;
-			_inputHandler.OnMove   -= _player.Move;
-		}
+		void Fire() => _playerShip.Fire ( Vector3.up * 3 );
 	}
 }

@@ -1,26 +1,22 @@
-namespace ShootEmUp
+﻿namespace ShootEmUp
 {
     using UnityEngine;
+
     
-    public sealed class Enemy : MonoBehaviour
+	public class EnemyBrain : MonoBehaviour
     {
-        [SerializeField] Health _health;
-        [SerializeField] Mover  _mover;
-        [SerializeField] Gun    _gun;
+        [SerializeField] Ship _ship;
         
         [SerializeField] float         _countdown = 1;
         
-        Player  _target;
+        Ship    _target;
         Vector2 _destination;
         float   _currentTime;
         bool    _isPointReached;
-        
-#region Editor
+
 
         public void Reset() => _currentTime = _countdown;
-
-#endregion
-#region UnityEvents
+        
 
         void FixedUpdate()
         {
@@ -30,19 +26,13 @@ namespace ShootEmUp
                 TryMove();
         }
 
-#endregion
-#region IEnemy
-
-        public Health Health => _health;
-
-        public void Init(Player player, Vector2 endPoint)
+        public void Init(Ship playerShip, Vector2 endPoint)
         {
-            _target         = player;
+            _target         = playerShip;
             _destination    = endPoint;
             _isPointReached = false;
         }
-
-#endregion
+        
 
         void TryMove()
         {
@@ -52,8 +42,8 @@ namespace ShootEmUp
                 _isPointReached = true;
                 return;
             }
-            
-            _mover.Move( vector.normalized );
+
+            _ship.Move( vector.normalized );
         }
 
         void TryAttack()
@@ -65,13 +55,14 @@ namespace ShootEmUp
             
             if (_currentTime <= 0)
             {
-                Vector2 startPosition = _gun.Position;
+                Vector2 startPosition = transform.position;
                 Vector2 vector        = (Vector2) _target.transform.position - startPosition;
                 Vector2 direction     = vector.normalized;
+
+                _ship.Fire( direction );
                 
-                _gun.Fire( direction * 2 );
                 _currentTime += _countdown;
             }
         }
-    }
+	}
 }

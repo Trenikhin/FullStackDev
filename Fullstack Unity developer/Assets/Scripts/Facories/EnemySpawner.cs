@@ -9,7 +9,7 @@ namespace ShootEmUp
     {
         [SerializeField] Transform[] spawnPositions;
         [SerializeField] Transform[] attackPositions;
-        [SerializeField] Player      character;
+        [SerializeField] Ship        character;
         [SerializeField] EnemyPool   _enemyPool;
 
         IEnumerator Start()
@@ -22,8 +22,8 @@ namespace ShootEmUp
             {
                 yield return new WaitForSeconds(Random.Range(1, 2));
 
-                Enemy enemy = _enemyPool.Rent();
-                SetupEnemy( enemy );
+                Ship ship = _enemyPool.Rent();
+                SetupEnemy( ship );
 
                 enemyCount++;
             }
@@ -32,14 +32,14 @@ namespace ShootEmUp
         void FixedUpdate() => HandleDied();
 
         
-        void SetupEnemy( Enemy enemy )
+        void SetupEnemy( Ship ship )
         {
             Transform spawnPosition = this.RandomPoint(this.spawnPositions);
-            enemy.transform.position = spawnPosition.position;
+            ship.transform.position = spawnPosition.position;
 
             Transform attackPosition = this.RandomPoint(this.attackPositions);
-               
-            enemy.Init( character, attackPosition.position );
+            
+            ship.GetComponent< EnemyBrain >().Init( character, attackPosition.position );
         }
 
         
@@ -52,7 +52,7 @@ namespace ShootEmUp
 
         void HandleDied()
         {
-            foreach (Enemy enemy in _enemyPool.ActiveObjs.ToArray()) // collection could be modified
+            foreach (Ship enemy in _enemyPool.ActiveObjs.ToArray()) // collection could be modified
             {
                 if (enemy.Health.Value <= 0)
                 {
