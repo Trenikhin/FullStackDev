@@ -4,14 +4,10 @@
 	
 	public class Gun : MonoBehaviour
 	{
-		[Header( "Настройки пули" )]
-		// Logic
 		[SerializeField] int          _damage = 1;
 		[SerializeField] PhysicsLayer _physicsLayer;
 		[SerializeField] Transform    _firePoint;
 		[SerializeField] float        _velocity;
-        
-		// View
 		[SerializeField] Color _color = Color.blue;
 
 		BulletSpawner _bulletSpawner;
