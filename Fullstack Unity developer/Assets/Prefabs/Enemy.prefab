@@ -225,6 +225,7 @@ MonoBehaviour:
   _damage: 1
   _physicsLayer: 13
   _firePoint: {fileID: 3195880656587174614}
+  _velocity: 1
   _color: {r: 1, g: 0, b: 0.2573738, a: 1}
 --- !u!1 &2239154907127902911
 GameObject:

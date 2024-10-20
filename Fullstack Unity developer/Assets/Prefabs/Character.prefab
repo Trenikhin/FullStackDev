@@ -194,6 +194,7 @@ MonoBehaviour:
   _damage: 1
   _physicsLayer: 14
   _firePoint: {fileID: 3926786963072264220}
+  _velocity: 3
   _color: {r: 0, g: 0, b: 1, a: 1}
 --- !u!114 &3215520650826960989
 MonoBehaviour:

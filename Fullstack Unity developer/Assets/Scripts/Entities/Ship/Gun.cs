@@ -9,7 +9,8 @@
 		[SerializeField] int          _damage = 1;
 		[SerializeField] PhysicsLayer _physicsLayer;
 		[SerializeField] Transform    _firePoint;
-		
+		[SerializeField] float        _velocity;
+        
 		// View
 		[SerializeField] Color _color = Color.blue;
 
@@ -23,17 +24,14 @@
 
 #region IGun
 
-		public Quaternion FirePointRotation => _firePoint.rotation;
-		public Vector3    Position          => _firePoint.position;
-		
-		public void Fire( Vector2 velocity )
+		public void Fire( Vector2 direction )
 		{
 			_bulletSpawner.SpawnBullet(
 				_firePoint.position,
 				_color,
 				(int) _physicsLayer,
 				_damage,
-				velocity
+				direction * _velocity
 			);
 		}
 

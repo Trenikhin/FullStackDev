@@ -22,6 +22,6 @@
 			_inputHandler.OnMove   -= _playerShip.Move;
 		}
 		
-		void Fire() => _playerShip.Fire ( Vector3.up * 3 );
+		void Fire() => _playerShip.Fire ( Vector3.up );
 	}
 }
