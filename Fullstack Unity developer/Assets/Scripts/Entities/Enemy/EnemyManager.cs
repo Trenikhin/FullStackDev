@@ -3,39 +3,34 @@ namespace ShootEmUp
     using UnityEngine;
     using Random = UnityEngine.Random;
     
-    public sealed class EnemyManager : EntityManager<Ship, EnemyParams>
+    public sealed class EnemyManager : MonoBehaviour
     {
         [SerializeField] Transform[] _spawnPositions;
         [SerializeField] Transform[] _attackPositions;
         [SerializeField] Ship _player;
+        [SerializeField] EnemyPool _pool;
+        
+        ActivePool<Ship> _activePool;
+        
+        void Awake() => _activePool = new ActivePool<Ship>(_pool);
 
-        void FixedUpdate() => HandleDied();
+        void FixedUpdate() =>  _activePool.ReturnObjsWith( e => e.Health.Value <= 0 );
 
         public void SpawnEnemy()
         {
-            Vector2 spawnPosition = RandomPoint(this._spawnPositions).position;
-            Vector2 attackPosition = RandomPoint(this._attackPositions).position;
+            Vector2 spawnPosition = RandomPoint(_spawnPositions).position;
+            Vector2 attackPosition = RandomPoint(_attackPositions).position;
 
-            var prms = new EnemyParams(_player, spawnPosition, attackPosition);
-
-            Spawn(prms);
+            var ship = _activePool.Rent();
+            
+            ship.transform.position = spawnPosition;
+            ship.GetComponent< EnemyBrain >().Init( _player, attackPosition );
         }
         
         Transform RandomPoint(Transform[] points)
         {
             int index = Random.Range(0, points.Length);
             return points[index];
-        }
-        
-        void HandleDied()
-        {
-            foreach (Ship enemy in _activeObjs.ToArray()) // collection could be modified
-            {
-                if (enemy.Health.Value <= 0)
-                {
-                    Destroy( enemy );
-                }
-            }
         }
     }
 }

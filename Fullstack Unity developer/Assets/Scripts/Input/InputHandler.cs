@@ -5,14 +5,14 @@ namespace ShootEmUp
 
     public interface IInputHandler
     {
-        event Action         OnAttack;
+        event Action OnAttack;
         event Action<Vector2> OnMove;
     }
     
     
     public sealed class InputHandler : MonoBehaviour, IInputHandler
     {
-        public event Action          OnAttack;
+        public event Action OnAttack;
         public event Action<Vector2> OnMove;
         
         bool    _fireRequired;

@@ -514,7 +514,6 @@ GameObject:
   - component: {fileID: 1290949509}
   - component: {fileID: 1290949510}
   - component: {fileID: 1290949511}
-  - component: {fileID: 1290949512}
   m_Layer: 0
   m_Name: <Bullets>
   m_TagString: Untagged
@@ -550,6 +549,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _levelBounds: {fileID: 2572952653776768186}
+  _pool: {fileID: 1290949511}
 --- !u!114 &1290949511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -565,19 +565,6 @@ MonoBehaviour:
   _prefab: {fileID: 3902474589104994836, guid: 5fe72886874b4e445b06cf777ca4920d, type: 3}
   _worldTransform: {fileID: 1337844002}
   _container: {fileID: 1290949509}
---- !u!114 &1290949512
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1290949508}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f95e15c1defc4d279b5e4c950450f58e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _pool: {fileID: 1290949511}
 --- !u!1 &1337844001
 GameObject:
   m_ObjectHideFlags: 0
@@ -632,8 +619,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bulletManager: {fileID: 1290949510}
   _inputHandler: {fileID: 1337844005}
-  _enemyFactory: {fileID: 1683128701}
-  _bulletFactory: {fileID: 1290949512}
 --- !u!114 &1337844005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -745,7 +730,6 @@ GameObject:
   - component: {fileID: 1683128698}
   - component: {fileID: 1683128700}
   - component: {fileID: 1683128699}
-  - component: {fileID: 1683128701}
   - component: {fileID: 1683128702}
   m_Layer: 0
   m_Name: <Enemies>
@@ -816,18 +800,6 @@ MonoBehaviour:
   - {fileID: 78117031}
   - {fileID: 883274640}
   _player: {fileID: 4414282821800802413}
---- !u!114 &1683128701
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1683128697}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b0fa93adcde4d0c82f70510c2ae2ed8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   _pool: {fileID: 1683128699}
 --- !u!114 &1683128702
 MonoBehaviour:
@@ -842,6 +814,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyManager: {fileID: 1683128700}
+  _maxEnemyCount: 5
+  _mixInterval: 1
+  _maxInterval: 2
 --- !u!1 &1831741368
 GameObject:
   m_ObjectHideFlags: 0

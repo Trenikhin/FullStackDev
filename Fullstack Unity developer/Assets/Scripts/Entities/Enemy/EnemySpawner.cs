@@ -7,13 +7,16 @@
     {
         [SerializeField] EnemyManager _enemyManager;
         
+        [SerializeField] int _maxEnemyCount = 5;
+        [SerializeField] float _mixInterval = 1;
+        [SerializeField] float _maxInterval = 2;
+        
         IEnumerator Start()
         {
-            const int maxEnemyCount = 5;
             int enemyCount = 0;
             
             // Spawn enemies
-            while (enemyCount <= maxEnemyCount)
+            while (enemyCount <= _maxEnemyCount)
             {
                 yield return new WaitForSeconds(GetInterval());
 
@@ -24,9 +27,5 @@
         }
         
         float GetInterval() => Random.Range(_mixInterval, _maxInterval);
-        
-        // Conts
-        const float _mixInterval = 1;
-        const float _maxInterval = 2;
     }
 }

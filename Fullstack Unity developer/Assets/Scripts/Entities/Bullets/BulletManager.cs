@@ -1,12 +1,18 @@
 ﻿namespace ShootEmUp
 {
+	using System.Linq;
 	using UnityEngine;
 	
-	public class BulletManager : EntityManager<Bullet, BulletParams>
+	public class BulletManager : MonoBehaviour
 	{
 		[SerializeField] LevelBounds _levelBounds;
+		[SerializeField] BulletPool _pool;
+		
+		ActivePool<Bullet> _activePool;
+		
+		void Awake() => _activePool = new ActivePool<Bullet>(_pool);
 
-		void FixedUpdate() => CollectBullets();
+		void FixedUpdate() => _activePool.ReturnObjsWith(b => !_levelBounds.InBounds(b.Pos));
 		
 		public void SpawnBullet
 		(
@@ -17,24 +23,16 @@
 			Vector2 velocity
 		)
 		{
-			var prms = new BulletParams(damage, physicsLayer, color, velocity, position);
-			var obj = Spawn( prms );
-			
-			obj.OnDestroy += Return;
+			var bullet = _activePool.Rent();
+			bullet.Init( damage, position, color, physicsLayer, velocity );
+			bullet.OnDestroy += Return;
 		}
 		
 		void Return( Bullet bullet )
 		{
 			bullet.OnDestroy -= Return;
 			
-			Destroy( bullet );
-		}
-		
-		void CollectBullets()
-		{
-			foreach (var bullet in _activeObjs.ToArray()) // collection could be modified
-				if (!_levelBounds.InBounds(bullet.Pos))
-					Return( bullet );;
+			_activePool.Return(bullet);
 		}
 	}
 }
