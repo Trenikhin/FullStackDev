@@ -28,14 +28,14 @@
 			var prms = new BulletParams(damage, physicsLayer, color, velocity, position);
 			Bullet bullet = _bulletFactory.Create( prms );
 			
-			bullet.OnCollisionEntered += Return;
+			bullet.OnDestroy += Return;
 			
 			OnSpawn( bullet );
 		}
 		
 		void Return( Bullet bullet )
 		{
-			bullet.OnCollisionEntered -= Return;
+			bullet.OnDestroy -= Return;
 			
 			_bulletFactory.Destroy( bullet );
 			OnObjDestroy( bullet );

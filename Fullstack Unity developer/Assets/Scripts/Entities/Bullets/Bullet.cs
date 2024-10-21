@@ -5,7 +5,7 @@ namespace ShootEmUp
     
     public sealed class Bullet : MonoBehaviour
     {
-        public event Action<Bullet> OnCollisionEntered;
+        public event Action<Bullet> OnDestroy;
         
         [SerializeField] Rigidbody2D _rigidbody2D;
         [SerializeField] SpriteRenderer _spriteRenderer;
@@ -17,7 +17,7 @@ namespace ShootEmUp
             if (collision.gameObject.TryGetComponent(out IDamageable entity))
                 entity.TakeDamage( _damage );
             
-            OnCollisionEntered?.Invoke( this ); 
+            OnDestroy?.Invoke( this ); 
         }
         
         
