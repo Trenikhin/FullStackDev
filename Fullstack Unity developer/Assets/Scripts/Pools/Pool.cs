@@ -6,24 +6,22 @@
 	
 	public class Pool<T> : MonoBehaviour where T : Component
 	{
-		[SerializeField] T         prefab;
-		[SerializeField] Transform worldTransform;
-		[SerializeField] Transform container;
+		[SerializeField] T _prefab;
+		[SerializeField] Transform _worldTransform;
+		[SerializeField] Transform _container;
 		
-		readonly HashSet<T> m_activeObjs = new();
-		readonly Queue<T>   m_Objs    = new();
-        
-		public IReadOnlyCollection<T> ActiveObjs => m_activeObjs;
+		readonly HashSet<T> _activeObjs = new();
+		readonly Queue<T>   _objs    = new();
         
         
 		public T Rent()
 		{
-			if (this.m_Objs.TryDequeue(out var obj))
-				obj.transform.SetParent(this.worldTransform);
+			if (_objs.TryDequeue(out var obj))
+				obj.transform.SetParent(_worldTransform);
 			else
-				obj = Instantiate(this.prefab, this.worldTransform);
+				obj = Instantiate(_prefab, _worldTransform);
 
-			m_activeObjs.Add( obj );
+			_activeObjs.Add( obj );
 			OnActivate( obj );
             
 			return obj;
@@ -32,11 +30,11 @@
         
 		public void Return(T obj)
 		{
-			if (this.m_activeObjs.Remove(obj))
+			if (_activeObjs.Remove(obj))
 			{
 				OnDeactivate(obj);
-				obj.transform.SetParent(this.container);
-				this.m_Objs.Enqueue(obj);
+				obj.transform.SetParent(_container);
+				_objs.Enqueue(obj);
 			}
 		}
 

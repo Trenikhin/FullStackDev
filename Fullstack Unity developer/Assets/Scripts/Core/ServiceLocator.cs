@@ -5,9 +5,8 @@
 	
 	public class ServiceLocator
 	{
-		static          Dictionary<Type, object> services = new Dictionary<Type, object>();
-		
-		static          ServiceLocator           _instance;
+		static Dictionary<Type, object> services = new Dictionary<Type, object>();
+		static ServiceLocator _instance;
 		
 		public static ServiceLocator Instance => _instance ??= new ServiceLocator();
         

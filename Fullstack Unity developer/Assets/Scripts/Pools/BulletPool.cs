@@ -1,7 +1,4 @@
 namespace ShootEmUp
 {
-    public sealed class BulletPool : Pool<Bullet>
-    {
-        
-    }
+    public sealed class BulletPool : Pool<Bullet> { }
 }

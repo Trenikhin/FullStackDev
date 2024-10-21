@@ -3,6 +3,10 @@
 	using UnityEngine;
 	using System;
 
+	public interface IDamageable
+	{
+		void TakeDamage(int damage);
+	}
 	
 	public class Health : MonoBehaviour, IDamageable
 	{

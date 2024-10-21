@@ -5,7 +5,9 @@ namespace ShootEmUp
     
     public sealed class Bullet : MonoBehaviour
     {
-        [SerializeField] Rigidbody2D    _rigidbody2D;
+        public event Action<Bullet> OnCollisionEntered;
+        
+        [SerializeField] Rigidbody2D _rigidbody2D;
         [SerializeField] SpriteRenderer _spriteRenderer;
         
         int  _damage;
@@ -15,25 +17,17 @@ namespace ShootEmUp
             if (collision.gameObject.TryGetComponent(out IDamageable entity))
                 entity.TakeDamage( _damage );
             
-            OnCollisionEntered?.Invoke(); 
+            OnCollisionEntered?.Invoke( this ); 
         }
-
- #region IBullet
-
-        public event Action OnCollisionEntered;
         
         
         public void Init( int damage, Vector3 pos, Color color, int physicsLayer, Vector2 velocity )
         {
             _damage   = damage;
-
             _spriteRenderer.color = color;
             _rigidbody2D.velocity = velocity;
-            
-            transform.position    = pos;
-            gameObject.layer      = physicsLayer;
+            transform.position = pos;
+            gameObject.layer  = physicsLayer;
         }
-
-#endregion
     }
 }

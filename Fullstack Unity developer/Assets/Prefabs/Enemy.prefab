@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 813269080783197423}
   - component: {fileID: 3576128833153627085}
   - component: {fileID: 4548122199853567318}
+  - component: {fileID: 2804313157090332912}
+  - component: {fileID: 4442263460182753021}
   m_Layer: 11
   m_Name: Enemy
   m_TagString: Untagged
@@ -166,8 +168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b406281211d14e258c6b151302547f7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ship: {fileID: 102605417607457000}
-  _countdown: 1
+  _moveAgent: {fileID: 2804313157090332912}
+  _shootAgent: {fileID: 4442263460182753021}
 --- !u!114 &102605417607457000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,6 +229,33 @@ MonoBehaviour:
   _firePoint: {fileID: 3195880656587174614}
   _velocity: 1
   _color: {r: 1, g: 0, b: 0.2573738, a: 1}
+--- !u!114 &2804313157090332912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559606060570185700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01c42aade48f4ac9aeca71e080875640, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ship: {fileID: 102605417607457000}
+--- !u!114 &4442263460182753021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559606060570185700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09032372b9f44fe6b059da96824cf24e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _countdown: 1
+  _ship: {fileID: 102605417607457000}
 --- !u!1 &2239154907127902911
 GameObject:
   m_ObjectHideFlags: 0

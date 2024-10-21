@@ -3,15 +3,18 @@ namespace ShootEmUp
     using System;
     using UnityEngine;
 
-    public abstract class InputHandler : MonoBehaviour
+    public interface IInputHandler
     {
-        public Action          OnAttack;
-        public Action<Vector2> OnMove;
+        event Action         OnAttack;
+        event Action<Vector2> OnMove;
     }
     
     
-    public sealed class CommonInputHandler : InputHandler
+    public sealed class InputHandler : MonoBehaviour, IInputHandler
     {
+        public event Action          OnAttack;
+        public event Action<Vector2> OnMove;
+        
         bool    _fireRequired;
         Vector2 _moveDirection;
 

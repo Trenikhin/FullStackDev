@@ -514,6 +514,7 @@ GameObject:
   - component: {fileID: 1290949509}
   - component: {fileID: 1290949510}
   - component: {fileID: 1290949511}
+  - component: {fileID: 1290949512}
   m_Layer: 0
   m_Name: <Bullets>
   m_TagString: Untagged
@@ -548,7 +549,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e87c0906c92149d195b482e3d83ea421, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bulletPool: {fileID: 1290949511}
   _levelBounds: {fileID: 2572952653776768186}
 --- !u!114 &1290949511
 MonoBehaviour:
@@ -562,9 +562,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37bd15923a144ffbab0333dc6e74e641, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 3902474589104994836, guid: 5fe72886874b4e445b06cf777ca4920d, type: 3}
-  worldTransform: {fileID: 1337844002}
-  container: {fileID: 1290949509}
+  _prefab: {fileID: 3902474589104994836, guid: 5fe72886874b4e445b06cf777ca4920d, type: 3}
+  _worldTransform: {fileID: 1337844002}
+  _container: {fileID: 1290949509}
+--- !u!114 &1290949512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1290949508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f95e15c1defc4d279b5e4c950450f58e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pool: {fileID: 1290949511}
 --- !u!1 &1337844001
 GameObject:
   m_ObjectHideFlags: 0
@@ -616,7 +629,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26543f3bb78f47008fd6d10abfd0d4e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _character: {fileID: 4414282821800802413}
 --- !u!114 &1337844004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -629,8 +641,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: add858f56c844bc1b6c7bcff7e461f06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bulletSpawner: {fileID: 1290949510}
+  _bulletManager: {fileID: 1290949510}
   _inputHandler: {fileID: 1337844005}
+  _enemyFactory: {fileID: 1683128701}
+  _bulletFactory: {fileID: 1290949512}
 --- !u!114 &1337844005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -716,6 +730,7 @@ GameObject:
   - component: {fileID: 1683128698}
   - component: {fileID: 1683128700}
   - component: {fileID: 1683128699}
+  - component: {fileID: 1683128701}
   m_Layer: 0
   m_Name: <Enemies>
   m_TagString: Untagged
@@ -750,9 +765,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5825eb7a29da45b9bee8f38860742c82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 102605417607457000, guid: 87fe189881a524806800482ac8eaaa83, type: 3}
-  worldTransform: {fileID: 1337844002}
-  container: {fileID: 1683128698}
+  _prefab: {fileID: 102605417607457000, guid: 87fe189881a524806800482ac8eaaa83, type: 3}
+  _worldTransform: {fileID: 1337844002}
+  _container: {fileID: 1683128698}
 --- !u!114 &1683128700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -765,14 +780,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32dae85f8264479bac19d85418d92392, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPositions:
+  _spawnPositions:
   - {fileID: 5098186055898699330}
   - {fileID: 3822857799868723767}
   - {fileID: 6359635304368030436}
   - {fileID: 2272249728968689581}
   - {fileID: 5689270860486713316}
   - {fileID: 106235378999874491}
-  attackPositions:
+  _attackPositions:
   - {fileID: 8569045085939387605}
   - {fileID: 9088267052445128325}
   - {fileID: 713232402740842374}
@@ -784,8 +799,20 @@ MonoBehaviour:
   - {fileID: 1549378007}
   - {fileID: 78117031}
   - {fileID: 883274640}
-  character: {fileID: 4414282821800802413}
-  _enemyPool: {fileID: 1683128699}
+  _player: {fileID: 4414282821800802413}
+--- !u!114 &1683128701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1683128697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b0fa93adcde4d0c82f70510c2ae2ed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pool: {fileID: 1683128699}
 --- !u!1 &1831741368
 GameObject:
   m_ObjectHideFlags: 0

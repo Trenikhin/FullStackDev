@@ -6,16 +6,13 @@ namespace ShootEmUp
     {
         // Components
         [SerializeField] Health _health;
-        [SerializeField] Mover  _mover;
-        [SerializeField] Gun    _gun;
-
-#region IShip
+        [SerializeField] Mover _mover;
+        [SerializeField] Gun _gun;
         
         public Health Health => _health;
         
-        public void Move(Vector2  moveDirection)	=> _mover.Move( moveDirection );
-        public void Fire( Vector2 direction )		=> _gun.Fire( direction );
-        
-#endregion
+        public void Move(Vector2  moveDirection) => _mover.Move( moveDirection );
+        public void Fire( Vector2 direction ) => _gun.Fire( direction );
+
     }
 }
