@@ -1,7 +1,6 @@
 namespace ShootEmUp
 {
     using Entities;
-    using System.Collections;
     using UnityEngine;
     using Random = UnityEngine.Random;
     
@@ -10,42 +9,37 @@ namespace ShootEmUp
         [SerializeField] Transform[] _spawnPositions;
         [SerializeField] Transform[] _attackPositions;
         [SerializeField] Ship _player;
+
+        IFactory<Ship, EnemyParams> _cache;
         
-        IFactory<Ship, EnemyParams> _enemyFactory;
-        
-        IEnumerator Start()
+        IFactory<Ship, EnemyParams> _enemyFactory
         {
-            _enemyFactory = ServiceLocator.Instance.Get<EnemyFactory>();
-            
-            const int maxEnemyCount = 5;
-            int enemyCount = 0;
-            
-            // Spawn enemies
-            while (enemyCount <= maxEnemyCount)
+            get
             {
-                yield return new WaitForSeconds(GetInterval());
-
-                Vector2 spawnPosition = RandomPoint(this._spawnPositions).position;
-                Vector2 attackPosition = RandomPoint(this._attackPositions).position;
-
-                var prms = new EnemyParams(_player, spawnPosition, attackPosition);
-                
-                Ship enemy = _enemyFactory.Create( prms );
-                OnSpawn( enemy );
-                
-                enemyCount++;
+                if (_cache != null)
+                    return _cache;
+                return _cache = ServiceLocator.Instance.Get<EnemyFactory>();
             }
         }
 
         void FixedUpdate() => HandleDied();
+
+        public void SpawnEnemy()
+        {
+            Vector2 spawnPosition = RandomPoint(this._spawnPositions).position;
+            Vector2 attackPosition = RandomPoint(this._attackPositions).position;
+
+            var prms = new EnemyParams(_player, spawnPosition, attackPosition);
+            
+            Ship enemy = _enemyFactory.Create( prms );
+            OnSpawn( enemy );
+        }
         
         Transform RandomPoint(Transform[] points)
         {
             int index = Random.Range(0, points.Length);
             return points[index];
         }
-        
-        float GetInterval() => Random.Range(_mixInterval, _maxInterval);
         
         void HandleDied()
         {
@@ -58,10 +52,5 @@ namespace ShootEmUp
                 }
             }
         }
-        
-        
-        // Conts
-        const float _mixInterval = 1;
-        const float _maxInterval = 2;
     }
 }

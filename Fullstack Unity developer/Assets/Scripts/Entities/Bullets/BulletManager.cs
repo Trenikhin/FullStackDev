@@ -44,7 +44,7 @@
 		void CollectBullets()
 		{
 			foreach (var bullet in _activeObjs.ToArray()) // collection could be modified
-				if (!_levelBounds.InBounds(bullet.transform.position))
+				if (!_levelBounds.InBounds(bullet.Pos))
 					Return( bullet );;
 		}
 	}

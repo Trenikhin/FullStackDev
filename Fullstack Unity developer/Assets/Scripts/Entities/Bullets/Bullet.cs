@@ -19,7 +19,8 @@ namespace ShootEmUp
             
             OnDestroy?.Invoke( this ); 
         }
-        
+
+        public Vector2 Pos => transform.position;
         
         public void Init( int damage, Vector3 pos, Color color, int physicsLayer, Vector2 velocity )
         {
