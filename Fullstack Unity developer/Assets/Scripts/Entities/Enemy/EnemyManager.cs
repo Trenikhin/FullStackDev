@@ -38,18 +38,15 @@ namespace ShootEmUp
         }
 
         void FixedUpdate() => HandleDied();
-
         
         Transform RandomPoint(Transform[] points)
         {
             int index = Random.Range(0, points.Length);
             return points[index];
         }
-
-
+        
         float GetInterval() => Random.Range(_mixInterval, _maxInterval);
-
-
+        
         void HandleDied()
         {
             foreach (Ship enemy in _activeObjs.ToArray()) // collection could be modified

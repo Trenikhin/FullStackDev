@@ -4,6 +4,6 @@
 	
 	public class GameFlow : MonoBehaviour
 	{
-		public void StopGame()		=> Time.timeScale = 0;
+		public void StopGame() => Time.timeScale = 0;
 	}
 }
