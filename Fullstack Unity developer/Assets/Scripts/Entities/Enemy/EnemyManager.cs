@@ -1,26 +1,13 @@
 namespace ShootEmUp
 {
-    using Entities;
     using UnityEngine;
     using Random = UnityEngine.Random;
     
-    public sealed class EnemyManager : EntityManager<Ship>
+    public sealed class EnemyManager : EntityManager<Ship, EnemyParams>
     {
         [SerializeField] Transform[] _spawnPositions;
         [SerializeField] Transform[] _attackPositions;
         [SerializeField] Ship _player;
-
-        IFactory<Ship, EnemyParams> _cache;
-        
-        IFactory<Ship, EnemyParams> _enemyFactory
-        {
-            get
-            {
-                if (_cache != null)
-                    return _cache;
-                return _cache = ServiceLocator.Instance.Get<EnemyFactory>();
-            }
-        }
 
         void FixedUpdate() => HandleDied();
 
@@ -30,9 +17,8 @@ namespace ShootEmUp
             Vector2 attackPosition = RandomPoint(this._attackPositions).position;
 
             var prms = new EnemyParams(_player, spawnPosition, attackPosition);
-            
-            Ship enemy = _enemyFactory.Create( prms );
-            OnSpawn( enemy );
+
+            Spawn(prms);
         }
         
         Transform RandomPoint(Transform[] points)
@@ -47,8 +33,7 @@ namespace ShootEmUp
             {
                 if (enemy.Health.Value <= 0)
                 {
-                    _enemyFactory.Destroy( enemy );
-                    OnObjDestroy( enemy );
+                    Destroy( enemy );
                 }
             }
         }

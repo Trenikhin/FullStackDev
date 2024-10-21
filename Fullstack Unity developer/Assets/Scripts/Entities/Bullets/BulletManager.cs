@@ -1,18 +1,10 @@
 ﻿namespace ShootEmUp
 {
-	using Entities;
 	using UnityEngine;
 	
-	public class BulletManager : EntityManager<Bullet>
+	public class BulletManager : EntityManager<Bullet, BulletParams>
 	{
 		[SerializeField] LevelBounds _levelBounds;
-		
-		IFactory<Bullet, BulletParams> _bulletFactory;
-
-		void Start()
-		{
-			_bulletFactory = ServiceLocator.Instance.Get<BulletFactory>();
-		}
 
 		void FixedUpdate() => CollectBullets();
 		
@@ -26,19 +18,16 @@
 		)
 		{
 			var prms = new BulletParams(damage, physicsLayer, color, velocity, position);
-			Bullet bullet = _bulletFactory.Create( prms );
+			var obj = Spawn( prms );
 			
-			bullet.OnDestroy += Return;
-			
-			OnSpawn( bullet );
+			obj.OnDestroy += Return;
 		}
 		
 		void Return( Bullet bullet )
 		{
 			bullet.OnDestroy -= Return;
 			
-			_bulletFactory.Destroy( bullet );
-			OnObjDestroy( bullet );
+			Destroy( bullet );
 		}
 		
 		void CollectBullets()

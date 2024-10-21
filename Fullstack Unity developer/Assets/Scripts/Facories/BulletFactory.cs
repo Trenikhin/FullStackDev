@@ -20,14 +20,12 @@
 		}
 	}
 	
-	public class BulletFactory : PoolFactory<Bullet>, IFactory<Bullet, BulletParams>
+	public class BulletFactory : PoolFactory<Bullet, BulletParams>
 	{
-		public Bullet Create( BulletParams @params )
+		public override Bullet Create( BulletParams @params )
 		{
 			Bullet bullet = Get();
-				
 			bullet.Init( @params.Damage, @params.Position, @params.Color, @params.PhysicsLayer, @params.Velocity );
-
 			return bullet;
 		}
 	}

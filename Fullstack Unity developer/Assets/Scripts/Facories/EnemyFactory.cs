@@ -16,9 +16,9 @@
 		}
 	}
 	
-	public class EnemyFactory : PoolFactory<Ship>, IFactory<Ship, EnemyParams>
+	public class EnemyFactory : PoolFactory<Ship, EnemyParams>
 	{
-		public Ship Create( EnemyParams @params )
+		public override Ship Create( EnemyParams @params )
 		{
 			Ship ship = Get();
 			SetupEnemy(ship, @params.Pos, @params.AttackPos, @params.Enemy );
