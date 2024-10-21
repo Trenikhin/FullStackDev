@@ -12,8 +12,9 @@
 		
 		void Awake() => _activePool = new ActivePool<Bullet>(_pool);
 
-		void FixedUpdate() => _activePool.ReturnObjsWith(b => !_levelBounds.InBounds(b.Pos));
+		void FixedUpdate() => _activePool.DoWithFiltered(IsOutOffBounds, Return);
 		
+
 		public void SpawnBullet
 		(
 			Vector2 position,
@@ -31,8 +32,9 @@
 		void Return( Bullet bullet )
 		{
 			bullet.OnDestroy -= Return;
-			
 			_activePool.Return(bullet);
 		}
+
+		bool IsOutOffBounds(Bullet bullet) => !_levelBounds.InBounds(bullet.Pos);
 	}
 }

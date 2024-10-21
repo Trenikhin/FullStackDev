@@ -14,7 +14,7 @@ namespace ShootEmUp
         
         void Awake() => _activePool = new ActivePool<Ship>(_pool);
 
-        void FixedUpdate() =>  _activePool.ReturnObjsWith( e => e.Health.Value <= 0 );
+        void FixedUpdate() => _activePool.DoWithFiltered(isDead, _activePool.Return);
 
         public void SpawnEnemy()
         {
@@ -32,5 +32,7 @@ namespace ShootEmUp
             int index = Random.Range(0, points.Length);
             return points[index];
         }
+
+        bool isDead(Ship ship) => ship.Health.Value <= 0;
     }
 }

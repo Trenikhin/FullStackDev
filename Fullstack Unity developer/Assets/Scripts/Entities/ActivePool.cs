@@ -28,16 +28,18 @@
 			_activeObjs.Remove( obj );
 			_pool.Return( obj );
 		}
-
-		public void ReturnObjsWith( Func<T, bool> condition )
+		
+		public void DoWithFiltered( Func<T, bool> condition, Action<T> action )
 		{
-			foreach (T obj in _activeObjs.ToArray()) // collection could be modified
-			{
-				if (condition(obj))
-				{
-					Return(obj);
-				}
-			}
+			foreach (var o in GetFiltered(condition))
+				action?.Invoke(o);
+		}
+
+		IEnumerable<T> GetFiltered( Func<T, bool> condition )
+		{
+			return _activeObjs
+				.Where(condition)
+				.ToList();
 		}
 	}
 }
