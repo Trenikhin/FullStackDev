@@ -14,7 +14,12 @@ namespace ShootEmUp
         
         void Awake() => _activePool = new ActivePool<Ship>(_pool);
 
-        void FixedUpdate() => _activePool.DoWithFiltered(isDead, _activePool.Return);
+        void FixedUpdate()
+        {
+            _activePool
+                .GetCopy( isDead )
+                .ForEach( _activePool.Return );	
+        }
 
         public void SpawnEnemy()
         {

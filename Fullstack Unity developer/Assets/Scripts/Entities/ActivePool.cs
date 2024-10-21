@@ -28,14 +28,8 @@
 			_activeObjs.Remove( obj );
 			_pool.Return( obj );
 		}
-		
-		public void DoWithFiltered( Func<T, bool> condition, Action<T> action )
-		{
-			foreach (var o in GetFiltered(condition))
-				action?.Invoke(o);
-		}
 
-		IEnumerable<T> GetFiltered( Func<T, bool> condition )
+		public List<T> GetCopy( Func<T, bool> condition )
 		{
 			return _activeObjs
 				.Where(condition)

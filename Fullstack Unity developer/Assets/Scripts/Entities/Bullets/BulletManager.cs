@@ -12,8 +12,13 @@
 		
 		void Awake() => _activePool = new ActivePool<Bullet>(_pool);
 
-		void FixedUpdate() => _activePool.DoWithFiltered(IsOutOffBounds, Return);
-		
+		void FixedUpdate()
+		{
+			_activePool
+				.GetCopy( IsOutOffBounds )
+				.ForEach( Return );	
+		}
+
 
 		public void SpawnBullet
 		(
