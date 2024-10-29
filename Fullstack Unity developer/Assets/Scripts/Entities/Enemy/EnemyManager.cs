@@ -17,7 +17,7 @@ namespace ShootEmUp
         void FixedUpdate()
         {
             _activePool
-                .GetCopy( isDead )
+                .GetCopy( IsDead )
                 .ForEach( _activePool.Return );	
         }
 
@@ -27,7 +27,8 @@ namespace ShootEmUp
             Vector2 attackPosition = RandomPoint(_attackPositions).position;
 
             var ship = _activePool.Rent();
-            
+
+            ship.Init();
             ship.transform.position = spawnPosition;
             ship.GetComponent< EnemyBrain >().Init( _player, attackPosition );
         }
@@ -38,6 +39,6 @@ namespace ShootEmUp
             return points[index];
         }
 
-        bool isDead(Ship ship) => ship.Health.Value <= 0;
+        static bool IsDead(Ship ship) => ship.Health.Value <= 0;
     }
 }

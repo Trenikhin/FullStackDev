@@ -13,7 +13,7 @@
 		float _currentTime;
 		bool  _isPointReached;
 
-		public void Reset() => _currentTime = _countdown;
+		void Reset() => _currentTime = _countdown;
 
 		public void Setup(Ship tgt)
 		{

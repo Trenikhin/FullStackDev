@@ -13,8 +13,20 @@
 		public Action< int> OnHealthChanged;
 		public Action       OnHealthEmpty;
 		
+		[SerializeField] int _health = 100;
 		[field: SerializeField] public int Value {get; private set;}
+		public int MaxHealth => _health;
 		
+		public void Start()
+		{
+			Value = _health;
+		}
+
+		public void ResetHealth()
+		{
+			Value = MaxHealth;
+		}
+
 		public void TakeDamage(int damage)
 		{
 			if (Value <= 0)

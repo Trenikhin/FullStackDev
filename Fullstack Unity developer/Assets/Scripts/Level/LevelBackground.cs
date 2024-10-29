@@ -3,19 +3,17 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
-    // Didn't touch // Не трогал этот класс
     public sealed class LevelBackground : MonoBehaviour
     {
-        private float startPositionY;
-        private float endPositionY;
-        private float movingSpeedY;
-        private float positionX;
-        private float positionZ;
+        float startPositionY;
+        float endPositionY;
+        float movingSpeedY;
+        float positionX;
+        float positionZ;
 
-        private Transform myTransform;
+        Transform myTransform;
 
-        [SerializeField]
-        private Params m_params;
+        [SerializeField] Params m_params;
 
         private void Awake()
         {
@@ -49,14 +47,9 @@ namespace ShootEmUp
         [Serializable]
         public sealed class Params
         {
-            [SerializeField]
-            public float m_startPositionY;
-
-            [SerializeField]
-            public float m_endPositionY;
-
-            [SerializeField]
-            public float m_movingSpeedY;
+            [SerializeField] public float m_startPositionY;
+            [SerializeField] public float m_endPositionY;
+            [SerializeField] public float m_movingSpeedY;
         }
     }
 }
