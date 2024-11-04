@@ -15,27 +15,19 @@ namespace Inventories
         public event Action<Item, Vector2Int> OnMoved;
         public event Action OnCleared;
 
-        public int Width => Map.Size.x;
-        public int Height => Map.Size.y;
-        public int Count
-        {
-            get
-            {
-                if (Width == 0 || Height == 0)
-                    return 0;
-                return GetOccupied().Count();
-            }
-        }
+        public int Width => Cells.Size.x;
+        public int Height => Cells.Size.y;
+        public int Count => Width == 0 || Height == 0 ? 0 : GetOccupied().Count();
 
         HashSet<Item> _items = new HashSet<Item>();
-        Map<Item> Map;
+        Cells<Item> Cells;
          
         public Inventory(in int width, in int height)
         {
             if ((width < 0 || height < 0) || (width < 1 && height < 1))
                 throw new ArgumentException();
             
-            Map = new Map<Item>(width, height);
+            Cells = new Cells<Item>(width, height);
         }
 
         public Inventory(
@@ -213,9 +205,9 @@ namespace Inventories
             if (item == null)
                 return false;
             
-            foreach (var p in Map)
+            foreach (var p in Cells)
             {
-                if (Map.IsSafe( p, item ) && item.Equals(Map.Get(p)))
+                if (Cells.IsSafe( p, item ) && item.Equals(Cells.Get(p)))
                 {
                     return true;
                 }
@@ -283,7 +275,7 @@ namespace Inventories
         /// </summary>
         public Item GetItem(in Vector2Int position)
         {
-            var item = Map[position];
+            var item = Cells[position];
 
             if (item == null)
                 throw new NullReferenceException();
@@ -418,7 +410,7 @@ namespace Inventories
 
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
-                    matrix[x, y] = Map[x, y];
+                    matrix[x, y] = Cells[x, y];
         }
 
         public IEnumerator<Item> GetEnumerator()
@@ -436,17 +428,17 @@ namespace Inventories
             RectInt rectInt = new RectInt( pos, size );
             
             return InMap(pos, size)               &&
-                   Map.Is(rectInt, null);
+                   Cells.Is(rectInt, null);
         }
 
-        bool InMap(in Vector2Int pos, in Vector2Int size) => Map.InMap( new RectInt( pos, size ));
+        bool InMap(in Vector2Int pos, in Vector2Int size) => Cells.InMap( new RectInt( pos, size ));
 
         void Add(Vector2Int p, Item i, bool callEvent = true)
         {
             RectInt rectInt     = i.GetRect( p );
 
             _items.Add(i);
-            Map.Set(rectInt, i);
+            Cells.Set(rectInt, i);
             
             if (callEvent)
                 OnAdded?.Invoke( i, p );
@@ -458,7 +450,7 @@ namespace Inventories
             RectInt r         = i.GetRect( p );
             
             _items.Remove(i);
-            Map.Set(r, null);
+            Cells.Set(r, null);
             
             if (callEvent)
                 OnRemoved?.Invoke( i, p );
@@ -469,9 +461,9 @@ namespace Inventories
             Vector2Int p = default;
             bool found = false;
 
-            foreach (Vector2Int key in Map) 
+            foreach (Vector2Int key in Cells) 
             {
-                if (Map[key] != null && item.Equals(Map[key]))
+                if (Cells[key] != null && item.Equals(Cells[key]))
                 {
                     p = key; 
                     found = true;
