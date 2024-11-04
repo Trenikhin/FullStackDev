@@ -17,9 +17,9 @@ namespace Inventories
 
         public int Width => Cells.Size.x;
         public int Height => Cells.Size.y;
-        public int Count => Width == 0 || Height == 0 ? 0 : GetOccupied().Count();
+        public int Count => Width == 0 || Height == 0 ? 0 : _items.Count();
 
-        HashSet<Item> _items = new HashSet<Item>();
+        HashSet<Item> _items = new ();
         Cells<Item> Cells;
          
         public Inventory(in int width, in int height)
@@ -344,7 +344,9 @@ namespace Inventories
         {
             var copy = Count;
             
-            GetOccupied().ToArray().ForEach( i => Remove(i) );
+            _items
+                .ToArray()
+                .ForEach( i => Remove(i) );
             
             if ( copy > 0 )
                 OnCleared?.Invoke();
@@ -355,7 +357,7 @@ namespace Inventories
         /// </summary>
         public int GetItemCount(string name)
         {
-            return GetOccupied().Count( i => i.Name == name );
+            return _items.Count( i => i.Name == name );
         }
 
         /// <summary>
@@ -475,11 +477,6 @@ namespace Inventories
                 throw new KeyNotFoundException();
 
             return p;
-        }
-        
-        IEnumerable<Item> GetOccupied()
-        {
-            return _items;
         }
 
         bool CanPlace( Item item, out Vector2Int p )
