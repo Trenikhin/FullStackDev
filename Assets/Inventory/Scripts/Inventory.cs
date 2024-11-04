@@ -15,19 +15,19 @@ namespace Inventories
         public event Action<Item, Vector2Int> OnMoved;
         public event Action OnCleared;
 
-        public int Width => _сells.Size.x;
-        public int Height => _сells.Size.y;
+        public int Width => _cells.Size.x;
+        public int Height => _cells.Size.y;
         public int Count => Width == 0 || Height == 0 ? 0 : _items.Count();
 
         HashSet<Item> _items = new ();
-        Cells<Item> _сells;
+        Cells<Item> _cells;
          
         public Inventory(in int width, in int height)
         {
             if ((width < 0 || height < 0) || (width < 1 && height < 1))
                 throw new ArgumentException();
             
-            _сells = new Cells<Item>(width, height);
+            _cells = new Cells<Item>(width, height);
         }
 
         public Inventory(
@@ -205,9 +205,9 @@ namespace Inventories
             if (item == null)
                 return false;
             
-            foreach (var p in _сells)
+            foreach (var p in _cells)
             {
-                if (_сells.IsSafe( p, item ) && item.Equals(_сells.Get(p)))
+                if (_cells.IsSafe( p, item ) && item.Equals(_cells.Get(p)))
                 {
                     return true;
                 }
@@ -247,7 +247,7 @@ namespace Inventories
         /// </summary>
         public bool RemoveItem(in Item item)
         {
-            if (CanRemove(item))
+            if (Contains(item))
             {
                 Remove(item);
                 return true;
@@ -260,7 +260,7 @@ namespace Inventories
         {
             position = default;
 
-            if (CanRemove(item))
+            if (Contains(item))
             {
                 position = GetPos(item);
                 Remove( item);
@@ -275,7 +275,7 @@ namespace Inventories
         /// </summary>
         public Item GetItem(in Vector2Int position)
         {
-            var item = _сells[position];
+            var item = _cells[position];
 
             if (item == null)
                 throw new NullReferenceException();
@@ -412,7 +412,7 @@ namespace Inventories
 
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
-                    matrix[x, y] = _сells[x, y];
+                    matrix[x, y] = _cells[x, y];
         }
 
         public IEnumerator<Item> GetEnumerator()
@@ -430,17 +430,17 @@ namespace Inventories
             RectInt rectInt = new RectInt( pos, size );
             
             return InMap(pos, size)               &&
-                   _сells.Is(rectInt, null);
+                   _cells.Is(rectInt, null);
         }
 
-        bool InMap(in Vector2Int pos, in Vector2Int size) => _сells.InMap( new RectInt( pos, size ));
+        bool InMap(in Vector2Int pos, in Vector2Int size) => _cells.InMap( new RectInt( pos, size ));
 
         void Add(Vector2Int p, Item i, bool callEvent = true)
         {
             RectInt rectInt     = i.GetRect( p );
 
             _items.Add(i);
-            _сells.Set(rectInt, i);
+            _cells.Set(rectInt, i);
             
             if (callEvent)
                 OnAdded?.Invoke( i, p );
@@ -452,7 +452,7 @@ namespace Inventories
             RectInt r         = i.GetRect( p );
             
             _items.Remove(i);
-            _сells.Set(r, null);
+            _cells.Set(r, null);
             
             if (callEvent)
                 OnRemoved?.Invoke( i, p );
@@ -463,9 +463,9 @@ namespace Inventories
             Vector2Int p = default;
             bool found = false;
 
-            foreach (Vector2Int key in _сells) 
+            foreach (Vector2Int key in _cells) 
             {
-                if (_сells[key] != null && item.Equals(_сells[key]))
+                if (_cells[key] != null && item.Equals(_cells[key]))
                 {
                     p = key; 
                     found = true;
@@ -490,11 +490,6 @@ namespace Inventories
                 throw new ArgumentException();
             
             return FindFreePosition(item, out p);
-        }
-
-        bool CanRemove( Item item )
-        {
-            return item != null && Contains(item);
         }
     }
     
