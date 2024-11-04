@@ -15,19 +15,19 @@ namespace Inventories
         public event Action<Item, Vector2Int> OnMoved;
         public event Action OnCleared;
 
-        public int Width => Cells.Size.x;
-        public int Height => Cells.Size.y;
+        public int Width => _сells.Size.x;
+        public int Height => _сells.Size.y;
         public int Count => Width == 0 || Height == 0 ? 0 : _items.Count();
 
         HashSet<Item> _items = new ();
-        Cells<Item> Cells;
+        Cells<Item> _сells;
          
         public Inventory(in int width, in int height)
         {
             if ((width < 0 || height < 0) || (width < 1 && height < 1))
                 throw new ArgumentException();
             
-            Cells = new Cells<Item>(width, height);
+            _сells = new Cells<Item>(width, height);
         }
 
         public Inventory(
@@ -36,7 +36,7 @@ namespace Inventories
             params KeyValuePair<Item, Vector2Int>[] items
         ) : this(width, height)
         {
-            if (items == null || width < 1 || height < 1)
+            if (items == null)
                 throw new ArgumentException(nameof(items));
             
             foreach (var i in items)
@@ -205,9 +205,9 @@ namespace Inventories
             if (item == null)
                 return false;
             
-            foreach (var p in Cells)
+            foreach (var p in _сells)
             {
-                if (Cells.IsSafe( p, item ) && item.Equals(Cells.Get(p)))
+                if (_сells.IsSafe( p, item ) && item.Equals(_сells.Get(p)))
                 {
                     return true;
                 }
@@ -275,7 +275,7 @@ namespace Inventories
         /// </summary>
         public Item GetItem(in Vector2Int position)
         {
-            var item = Cells[position];
+            var item = _сells[position];
 
             if (item == null)
                 throw new NullReferenceException();
@@ -412,7 +412,7 @@ namespace Inventories
 
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
-                    matrix[x, y] = Cells[x, y];
+                    matrix[x, y] = _сells[x, y];
         }
 
         public IEnumerator<Item> GetEnumerator()
@@ -430,17 +430,17 @@ namespace Inventories
             RectInt rectInt = new RectInt( pos, size );
             
             return InMap(pos, size)               &&
-                   Cells.Is(rectInt, null);
+                   _сells.Is(rectInt, null);
         }
 
-        bool InMap(in Vector2Int pos, in Vector2Int size) => Cells.InMap( new RectInt( pos, size ));
+        bool InMap(in Vector2Int pos, in Vector2Int size) => _сells.InMap( new RectInt( pos, size ));
 
         void Add(Vector2Int p, Item i, bool callEvent = true)
         {
             RectInt rectInt     = i.GetRect( p );
 
             _items.Add(i);
-            Cells.Set(rectInt, i);
+            _сells.Set(rectInt, i);
             
             if (callEvent)
                 OnAdded?.Invoke( i, p );
@@ -452,7 +452,7 @@ namespace Inventories
             RectInt r         = i.GetRect( p );
             
             _items.Remove(i);
-            Cells.Set(r, null);
+            _сells.Set(r, null);
             
             if (callEvent)
                 OnRemoved?.Invoke( i, p );
@@ -463,9 +463,9 @@ namespace Inventories
             Vector2Int p = default;
             bool found = false;
 
-            foreach (Vector2Int key in Cells) 
+            foreach (Vector2Int key in _сells) 
             {
-                if (Cells[key] != null && item.Equals(Cells[key]))
+                if (_сells[key] != null && item.Equals(_сells[key]))
                 {
                     p = key; 
                     found = true;
