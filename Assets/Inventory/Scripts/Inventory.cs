@@ -36,16 +36,7 @@ namespace Inventories
             params KeyValuePair<Item, Vector2Int>[] items
         ) : this(width, height)
         {
-            if (items == null)
-                throw new ArgumentException(nameof(items));
-            
-            foreach (var i in items)
-            {
-                if (i.Key == null)
-                    throw new ArgumentException(nameof(items));
-                
-                AddItem( i.Key, i.Value );   
-            }
+            AddItems(items.Select(i => (i.Key, i.Value)));
         }
 
         public Inventory(
@@ -54,16 +45,7 @@ namespace Inventories
             params Item[] items
         ) : this(width, height)
         {
-            if (items == null)
-                throw new ArgumentException(nameof(items));
-            
-            foreach (var i in items)
-            {
-                if (i == null)
-                    throw new ArgumentException(nameof(items));
-                
-                AddItem( i );   
-            }
+            AddItems(items);
         }
 
         public Inventory(
@@ -72,16 +54,7 @@ namespace Inventories
             in IEnumerable<KeyValuePair<Item, Vector2Int>> items
         ) : this(width, height)
         {
-            if (items == null)
-                throw new ArgumentException(nameof(items));
-            
-            foreach (var i in items)
-            {
-                if (i.Key == null)
-                    throw new ArgumentException(nameof(items));
-                
-                AddItem( i.Key, i.Value );
-            }
+            AddItems(items.Select(i => (i.Key, i.Value)));
         }
 
         public Inventory(
@@ -90,16 +63,7 @@ namespace Inventories
             in IEnumerable<Item> items
         ) : this(width, height)
         {
-            if (items == null)
-                throw new ArgumentException(nameof(items));
-            
-            foreach (var i in items)
-            {
-                if (i == null)
-                    throw new ArgumentException(nameof(items));
-
-                AddItem( i );   
-            }
+            AddItems(items);
         }
 
         /// <summary>
@@ -490,6 +454,34 @@ namespace Inventories
                 throw new ArgumentException();
             
             return FindFreePosition(item, out p);
+        }
+
+        void AddItems(IEnumerable<Item> items)
+        {
+            if (items == null)
+                throw new ArgumentException(nameof(items));
+            
+            foreach (var i in items)
+            {
+                if (i == null)
+                    throw new ArgumentException(nameof(items));
+                
+                AddItem( i );
+            }
+        }
+
+        void AddItems( IEnumerable< (Item, Vector2Int) > items )
+        {
+            if (items == null)
+                throw new ArgumentException(nameof(items));
+            
+            foreach (var i in items)
+            {
+                if (i.Item1 == null)
+                    throw new ArgumentException(nameof(items));
+                
+                AddItem( i.Item1, i.Item2 );
+            }
         }
     }
     
