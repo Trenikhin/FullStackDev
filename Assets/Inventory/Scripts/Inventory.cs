@@ -17,9 +17,9 @@ namespace Inventories
 
         public int Width => _cells.Size.x;
         public int Height => _cells.Size.y;
-        public int Count => Width == 0 || Height == 0 ? 0 : _items.Count; // (!) Width == 0 || Height: workaround to avoid editing tests
+        public int Count => _items.Count;
 
-        Dictionary<Item, Vector2Int> _items = new (); // можно обойтись без этого, нужно для оптимизации поиска и удобства
+        Dictionary<Item, Vector2Int> _items = new (); // For search optimization and convenience (to think about)
         Cells<Item> _cells;
          
         public Inventory(in int width, in int height)
