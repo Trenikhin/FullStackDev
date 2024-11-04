@@ -17,9 +17,9 @@ namespace Inventories
 
         public int Width => _cells.Size.x;
         public int Height => _cells.Size.y;
-        public int Count => Width == 0 || Height == 0 ? 0 : _items.Count();
+        public int Count => Width == 0 || Height == 0 ? 0 : _items.Count; // (!) Width == 0 || Height: workaround to avoid editing tests
 
-        HashSet<Item> _items = new ();
+        Dictionary<Item, Vector2Int> _items = new (); // можно обойтись без этого, нужно для оптимизации поиска и удобства
         Cells<Item> _cells;
          
         public Inventory(in int width, in int height)
@@ -170,12 +170,8 @@ namespace Inventories
                 return false;
             
             foreach (var p in _cells)
-            {
                 if (_cells.IsSafe( p, item ) && item.Equals(_cells.Get(p)))
-                {
                     return true;
-                }
-            }
            
             return false;
         }
@@ -277,15 +273,10 @@ namespace Inventories
         {
             if (item == null)
                 throw new NullReferenceException(nameof(item));
-                
-            var i =  item
-                .GetRect(GetPos(item))
-                .Iterate()
-                .OrderBy(pos => pos.x)
-                .ThenBy(pos => pos.y)
-                .ToArray();
             
-            return i;
+            return item
+                .GetRect(GetPos(item))
+                .ToArray();
         }
 
         public bool TryGetPositions(in Item item, out Vector2Int[] positions)
@@ -308,7 +299,7 @@ namespace Inventories
         {
             var copy = Count;
             
-            _items
+            _items.Keys
                 .ToArray()
                 .ForEach( i => Remove(i) );
             
@@ -321,7 +312,7 @@ namespace Inventories
         /// </summary>
         public int GetItemCount(string name)
         {
-            return _items.Count( i => i.Name == name );
+            return _items.Keys.Count( i => i.Name == name );
         }
 
         /// <summary>
@@ -358,11 +349,11 @@ namespace Inventories
             Clear();
             
             copy
-                .OrderByDescending( i => i.Size.x * i.Size.y )
+                .OrderByDescending( i => i.Key.Size.x * i.Key.Size.y )
                 .ForEach( i =>
                 {
-                    FindFreePosition( i, out Vector2Int position );
-                    AddItem(i, position);
+                    FindFreePosition( i.Key, out Vector2Int position );
+                    AddItem(i.Key, position);
                 });
         }
 
@@ -381,7 +372,7 @@ namespace Inventories
 
         public IEnumerator<Item> GetEnumerator()
         {
-            return _items.GetEnumerator();
+            return _items.Keys.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -403,7 +394,7 @@ namespace Inventories
         {
             RectInt rectInt     = i.GetRect( p );
 
-            _items.Add(i);
+            _items.Add(i, p);
             _cells.Set(rectInt, i);
             
             if (callEvent)
@@ -424,20 +415,7 @@ namespace Inventories
 
         Vector2Int GetPos(Item item)
         {
-            Vector2Int p = default;
-            bool found = false;
-
-            foreach (Vector2Int key in _cells) 
-            {
-                if (_cells[key] != null && item.Equals(_cells[key]))
-                {
-                    p = key; 
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found)
+            if ( !_items.TryGetValue( item, out Vector2Int p ) )
                 throw new KeyNotFoundException();
 
             return p;
@@ -488,5 +466,13 @@ namespace Inventories
     public static class ItemExt
     {
         public static RectInt GetRect( this Item i, Vector2Int p ) => new ( p, i.Size );
+
+        public static Vector2Int[] ToArray(this RectInt r)
+        {
+            return r.Iterate()
+                .OrderBy(pos => pos.x)
+                .ThenBy(pos => pos.y)
+                .ToArray();
+        }
     }
 }
