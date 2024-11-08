@@ -17,7 +17,7 @@ namespace Inventories
         public int Height => _cells.GetLength(1);
         public int Count => _items.Count;
 
-        Dictionary<Item, Vector2Int> _items = new (); // For search optimization and convenience (to think about)
+        Dictionary<Item, Vector2Int> _items = new ();
         Item[,] _cells;
          
         public Inventory(in int width, in int height)
@@ -271,7 +271,6 @@ namespace Inventories
             
             positions = GetPositions(item);
             return true;
-
         }
 
         /// <summary>
@@ -315,7 +314,6 @@ namespace Inventories
             OnMoved?.Invoke( item, position );
                 
             return true;
-
         }
 
         /// <summary>
