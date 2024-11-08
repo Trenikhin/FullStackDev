@@ -191,27 +191,25 @@ namespace Inventories
         /// </summary>
         public bool RemoveItem(in Item item)
         {
-            if (Contains(item))
-            {
-                Remove(item);
-                return true;
-            }
+            if (!Contains(item))
+                return false;
             
-            return false;
+            Remove(item);
+            return true;
         }
 
         public bool RemoveItem(in Item item, out Vector2Int position)
         {
-            position = default;
-
-            if (Contains(item))
+            if (!Contains(item))
             {
-                position = GetPos(item);
-                Remove( item);
-                return true;
+                position = default;
+                return false;   
             }
             
-            return false;
+            position = GetPos(item);
+            Remove( item);
+            
+            return true;
         }
 
         /// <summary>
@@ -234,12 +232,14 @@ namespace Inventories
 
         public bool TryGetItem(in Vector2Int position, out Item item)
         {
-            item = default;
-
             if (!InMap(position, Vector2Int.one) || IsFree(position))
-                return false;
+            {
+                item = default;
+                return false;   
+            }
             
             item = GetItem(position);
+            
             return true;
         }
 
@@ -263,15 +263,15 @@ namespace Inventories
 
         public bool TryGetPositions(in Item item, out Vector2Int[] positions)
         {
-            positions = null;
-            
-            if (Contains(item))
+            if (!Contains(item))
             {
-                positions = GetPositions(item);
-                return true;
+                positions = null;
+                return false;
             }
+            
+            positions = GetPositions(item);
+            return true;
 
-            return false;
         }
 
         /// <summary>
@@ -404,6 +404,7 @@ namespace Inventories
 
             _items.Add(i, p);
             _cells.Set(rectInt, i);
+            
             if (callEvent)
                 OnAdded?.Invoke( i, p );
         }
@@ -430,10 +431,11 @@ namespace Inventories
 
         bool CanPlace( Item item, out Vector2Int p )
         {
-            p = default;
-            
-            if (item == null || Contains(item) )
-                return false;
+            if (item == null || Contains(item))
+            {
+                p = default;
+                return false;   
+            }
 
             if (item.Size.LessThan(1))
                 throw new ArgumentException();
