@@ -25,7 +25,7 @@
 		public int ConvertedMaterialsCapacity = 12;
 		public int InputAmount = 3;
 		public int OutputAmount = 1;
-		public float ConvertTime = 10;
+		public float ConvertTime = 1;
 		
 		// Setup convertables
 		public List<ConvertOperation> ConvertOperations = new List<ConvertOperation>()
@@ -65,16 +65,6 @@
 		public bool CanConvert(string name) => ConvertOperations
 			.Select(c => c.From.Obj.Name)
 			.Contains( name );
-		
-		public ObjConverter GetConverter()
-		{
-			return new ObjConverter(
-				RawMaterialsCapacity,
-				ConvertedMaterialsCapacity,
-				OutputAmount,
-				InputAmount ,
-				ConvertTime);
-		}
 	}
 
 	public class ObjsConfig

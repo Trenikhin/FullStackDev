@@ -10,123 +10,154 @@
 	public interface IObjConverter
 	{
 		public bool IsOn {get;}
-		
-		public int RawMaterialsCapacity {get;}
-		public int ConvertedMaterialsCapacity {get;}
-		public int InputAmount {get;}
-		public int OutputAmount {get;}
-		public TimeSpan ConvertTime {get;}
-		public float ConvertRemainingTime {get;}
+		public int RawCapacity { get; }
+		public int RawMaterialsAmount { get; }
+		public int ConvertedCapacity { get; }
+		public int ConvertedMaterialsAmount { get; }
+		public TimeSpan ConvertTime { get; }
+		public int CycleInput { get; }
+		public int CycleOutput { get; }
 
 		void Toggle(bool isOn);
-
-		void PushRaw( ObjStack obj, out int outOfCapacity);
-		ObjStack PullConverted();
+		void Push(ObjStack obj, out int outOfCapacity);
+		ObjStack Pull(int amount);
 	}
 	
-	public class ObjConverter : IDisposable, IObjConverter
+	public class ObjConverter : IInitializeble, IDisposable, IObjConverter
 	{
-		Stack<ObjType> _rowItems = new Stack<ObjType>();
-		Stack<ObjType> _inProgress = new Stack<ObjType>();
-		Stack<ObjType> _convertedItems = new Stack<ObjType>();
+		ConvertConfig _config;
+		ITimeHelper _timeHelper;
 		
-		float _time;
-		bool _isConverting;
-
-		public bool IsOn { get; private set; }
-		public int RawMaterialsCapacity { get; private set; }
-		public int ConvertedMaterialsCapacity { get; private set; }
-		public int InputAmount { get; }
-		public int OutputAmount { get; private set; }
-		public TimeSpan ConvertTime {get; private set;}
-		public float ConvertRemainingTime { get; private set; }
-
+		public int RawCapacity { get; private set; }
+		public int RawMaterialsAmount { get; private set; }
+		public int ConvertedCapacity { get; private set; }
+		public int ConvertedMaterialsAmount { get; private set; }
+		public TimeSpan ConvertTime { get; private set; }
+		public int CycleInput { get; private set; }
+		public int CycleOutput { get; private set; }
+		
+		IDisposable _cycleTicks;
 		CompositeDisposable _disposables = new CompositeDisposable();
-		IDisposable _ticks;
-
-		public ObjConverter( int rawMaterialsCapacity, int convertedMaterialsCapacity, int outputAmount, int inputAmount, float convertTime )
+		
+		ReactiveProperty<bool> _isConverting = new ReactiveProperty<bool>(false);
+		ReactiveProperty<bool> _isOn = new ReactiveProperty<bool>(false);
+		
+		ConverterZone RawMaterials;
+		ConverterZone ReadyMaterials;
+		
+		public ObjConverter( ConvertConfig config, ITimeHelper timeHelper )
 		{
-			if (rawMaterialsCapacity < 0)
-				throw new ArgumentOutOfRangeException(nameof(rawMaterialsCapacity));
-			if (convertedMaterialsCapacity < 0)
-				throw new ArgumentOutOfRangeException(nameof(convertedMaterialsCapacity));
-			if (convertTime < 0) throw new ArgumentOutOfRangeException(nameof(convertTime));
-
-			InputAmount = inputAmount;
-			OutputAmount = outputAmount;
-			RawMaterialsCapacity = rawMaterialsCapacity;
-			ConvertedMaterialsCapacity = convertedMaterialsCapacity;
-			ConvertTime = TimeSpan.FromSeconds(convertTime); 
-			ConvertRemainingTime = convertTime;
+			_config = config;
+			_timeHelper = timeHelper;
 		}
 		
+		public void Initialize()
+		{
+			// Start new Cycle
+			Observable
+				.Merge
+				(
+					_isOn.AsUnitObservable(),
+					_isConverting.AsUnitObservable(),
+					RawMaterials.AmountRx.AsUnitObservable()
+				) // isOn + not converting + enough materials
+				.Where(_ =>
+					_isOn.Value &&
+					RawMaterials.AmountRx.Value >= CycleInput &&
+					!_isConverting.Value 
+				 )
+				.Subscribe( _ => StartCycle() )
+				.AddTo(_disposables);
+			
+			// Stop Cycle
+			_isOn
+				.Where(_ => !_isOn.Value)
+				.Subscribe( _ => StopCycle() )
+				.AddTo(_disposables);
+		}
+
 		public void Dispose()
 		{
 			_disposables?.Dispose();
-			_ticks?.Dispose();
 		}
 
+		public bool IsOn => _isOn.Value;
+		
 		public void Toggle(bool isOn)
 		{
-			return;
-			if (isOn && !_isConverting)
-				RestartConverting();
-			else 
-				StopConverting();
+			throw new NotImplementedException();
 		}
 
-		public void PushRaw( ObjStack obj, out int outOfCapacity)
+		public void Push(ObjStack obj, out int outOfCapacity)
 		{
-			outOfCapacity = 0;
+			outOfCapacity = 1;
 		}
-
-		public ObjStack PullConverted()
+		
+		public ObjStack Pull(int amount)
 		{
 			return new ObjStack();
 		}
-
-		void RestartConverting()
+		
+		void StartCycle()
 		{
-			if (_isConverting)
-				StopConverting();
+			EnterCycle();
 			
-			Enter_Convert();
-			_ticks = Observable
+			// Start ticks
+			_cycleTicks?.Dispose();
+			_cycleTicks = Observable
 				.EveryUpdate()
-				.Subscribe( _ => Tick_Convert() )
-				.AddTo(_disposables);
+				.Subscribe( _ => TickCycle() )
+				.AddTo( _disposables );
 		}
-		
-		void StopConverting()
+
+		void StopCycle()
 		{
-			_ticks?.Dispose();
-			Exit_Convert();	
-		}
-		
-		void Enter_Convert()
-		{
-			_isConverting = true;
 			
-			for (int i = 0; i < OutputAmount; i++)
-				_inProgress.Push( _rowItems.Pop() );	
+		}
 
-			_time = 10;
+		void EnterCycle()
+		{
+			_isConverting.Value = true;
+			
+			// Get materials
 		}
 		
-		void Tick_Convert()
+		void TickCycle()
 		{
-			_time -= Time.deltaTime;
-
-			if (_time <= 0)
-				RestartConverting();
+			if (IsTimeEnd())
+				ExitCycle();
 		}
 
-		void Exit_Convert()
+		void ExitCycle()
 		{
-			for (int i = 0; i < _inProgress.Count; i++)
-				_convertedItems.Push( _inProgress.Pop() );
+			// Push new materials
 			
-			_isConverting = false;
+			_isConverting.Value = false;
 		}
+
+		bool IsTimeEnd() => true;
+	}
+
+	public class ConverterZone
+	{
+		public int Capacity { get; private set; }
+		public int MaterialsAmount { get; private set; }
+		
+		public ReactiveProperty<int> AmountRx { get; private set; }
+		
+		public ObjStack Pull(int amount)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void Push(ObjStack obj, out int outOfCapacity)
+		{
+			throw new NotImplementedException();
+		}
+	}
+	
+	public interface IInitializeble
+	{
+		void Initialize();
 	}
 }

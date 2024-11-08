@@ -9,11 +9,17 @@
 		static ConfigProvider _instance;
 
 		// Core
-		public ConvertConfig ConvertConfig;
-		public ObjsConfig ObjsConfig;
+		public ConvertConfig ConvertConfig = new ConvertConfig();
+		public ObjsConfig ObjsConfig = new ObjsConfig();
 		
 		// Objs
-		public ObjConfig Wood;
-		public ObjConfig Plank;
+		public ObjConfig Wood = new ObjConfig()
+		{
+			Name = "Wood",
+		};
+		public ObjConfig Plank = new ObjConfig()
+		{
+			Name = "Plank",
+		};
 	}
 }
