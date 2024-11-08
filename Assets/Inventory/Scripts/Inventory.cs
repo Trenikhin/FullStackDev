@@ -5,7 +5,6 @@ namespace Inventories
     using System.Collections.Generic;
     using UnityEngine;
     using System.Linq;
-    using Game.Utilities;
 
     public sealed class Inventory : IEnumerable<Item>
     {
@@ -235,15 +234,13 @@ namespace Inventories
 
         public bool TryGetItem(in Vector2Int position, out Item item)
         {
-            item = null;
-                
-            if (InMap( position, Vector2Int.one ) && !IsFree( position ) )
-            {
-                item = GetItem(position);
-                return true;
-            }
+            item = default;
+
+            if (!InMap(position, Vector2Int.one) || IsFree(position))
+                return false;
             
-            return false;
+            item = GetItem(position);
+            return true;
         }
 
         public bool TryGetItem(in int x, in int y, out Item item)
