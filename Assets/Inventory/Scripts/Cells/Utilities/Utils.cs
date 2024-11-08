@@ -148,6 +148,7 @@
 
 		#endregion
 
+		
 		public static Vector2 CamHalfSize()		=> CamSize() / 2;
 		public static Vector2 CamSize()			=> Camera.main.orthographicSize * new Vector2( Camera.main.aspect, 1 ) * 2;
 
@@ -270,10 +271,7 @@
 			return new RectInt(minX, minY, maxX - minX + 1, maxY - minY + 1);
 		}
 		
-		public static bool LessThan(this Vector2Int vector, int value)
-		{
-			return vector.x < value || vector.y < value;
-		}
+
 	}
 }
 

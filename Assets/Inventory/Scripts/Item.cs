@@ -2,10 +2,6 @@ namespace Inventories
 {
     using UnityEngine;
 
-    
-    using System.Collections.Generic;
-    using Game.Maps;
-
     ///Don't modify 
     public sealed class Item
     {

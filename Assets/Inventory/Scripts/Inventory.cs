@@ -5,7 +5,6 @@ namespace Inventories
     using System.Collections.Generic;
     using UnityEngine;
     using System.Linq;
-    using Game.Maps;
     using Game.Utilities;
 
     public sealed class Inventory : IEnumerable<Item>
@@ -15,19 +14,19 @@ namespace Inventories
         public event Action<Item, Vector2Int> OnMoved;
         public event Action OnCleared;
 
-        public int Width => _cells.Size.x;
-        public int Height => _cells.Size.y;
+        public int Width => _cells.GetLength(0);
+        public int Height => _cells.GetLength(1);
         public int Count => _items.Count;
 
         Dictionary<Item, Vector2Int> _items = new (); // For search optimization and convenience (to think about)
-        Cells<Item> _cells;
+        Item[,] _cells;
          
         public Inventory(in int width, in int height)
         {
             if ((width < 0 || height < 0) || (width < 1 && height < 1))
                 throw new ArgumentException();
             
-            _cells = new Cells<Item>(width, height);
+            _cells = new Item[width, height];
         }
 
         public Inventory(
@@ -221,7 +220,7 @@ namespace Inventories
         /// </summary>
         public Item GetItem(in Vector2Int position)
         {
-            var item = _cells[position];
+            var item = _cells[ position.x, position.y ];
 
             if (item == null)
                 throw new NullReferenceException();
@@ -237,8 +236,8 @@ namespace Inventories
         public bool TryGetItem(in Vector2Int position, out Item item)
         {
             item = null;
-            
-            if (!IsFree( position ) && InMap( position, Vector2Int.one ) )
+                
+            if (InMap( position, Vector2Int.one ) && !IsFree( position ) )
             {
                 item = GetItem(position);
                 return true;
@@ -283,13 +282,11 @@ namespace Inventories
         /// </summary>
         public void Clear()
         {
-            var copy = Count;
+            var inventorySize = Count;
+
+            ClearInventory();
             
-            _items.Keys
-                .ToArray()
-                .ForEach( i => Remove(i) );
-            
-            if ( copy > 0 )
+            if ( inventorySize > 0 )
                 OnCleared?.Invoke();
         }
 
@@ -309,21 +306,19 @@ namespace Inventories
             if (item == null)
                 throw new ArgumentNullException();
             
-            if (!Contains(item))
+            bool canMove  = Contains(item) &&
+                            IsFree(position, item.Size) || 
+                            (TryGetItem(position, out Item i) && i.Equals(item));
+
+            if (!canMove)
                 return false;
             
-            bool tgtCellIsFree  = IsFree(position, item.Size) || (TryGetItem(position, out Item i) && i.Equals(item));
-            
-            if ( tgtCellIsFree)
-            {
-                Remove( item, false );
-                Add( position, item, false );
-                OnMoved?.Invoke( item, position );
+            Remove( item, false );
+            Add( position, item, false );
+            OnMoved?.Invoke( item, position );
                 
-                return true;
-            }
+            return true;
 
-            return false;
         }
 
         /// <summary>
@@ -331,16 +326,29 @@ namespace Inventories
         /// </summary>
         public void ReorganizeSpace()
         {
+            // Copy and clear
             var copy = _items.ToArray();
-            Clear();
+            ClearInventory();
             
-            copy
-                .OrderByDescending( i => i.Key.Size.x * i.Key.Size.y )
-                .ForEach( i =>
+            // Sort items by size
+            for (int i = 0; i < copy.Length - 1; i++)
+            {
+                for (int j = 0; j < copy.Length - 1 - i; j++)
                 {
-                    FindFreePosition( i.Key, out Vector2Int position );
-                    AddItem(i.Key, position);
-                });
+                    int sizeA = copy[j].Key.Size.x * copy[j].Key.Size.y;
+                    int sizeB = copy[j + 1].Key.Size.x * copy[j + 1].Key.Size.y;
+                    
+                    if (sizeA < sizeB)
+                        (copy[j], copy[j + 1]) = (copy[j + 1], copy[j]);
+                }
+            }
+            
+            // Set items to new positions
+            for (int i = 0; i < copy.Length; i++)
+            {
+                FindFreePosition(copy[i].Key, out Vector2Int position);
+                Add(position, copy[i].Key, false);
+            }
         }
 
         /// <summary>
@@ -350,7 +358,7 @@ namespace Inventories
         {
             if (matrix.GetLength(0) != Width || matrix.GetLength(1) != Height)
                 throw new ArgumentException("The provided matrix must have the same dimensions as the inventory.");
-
+            
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                     matrix[x, y] = _cells[x, y];
@@ -374,7 +382,24 @@ namespace Inventories
                    _cells.Is(rectInt, null);
         }
 
-        bool InMap(in Vector2Int pos, in Vector2Int size) => _cells.InMap( new RectInt( pos, size ));
+        bool InMap(in Vector2Int pos, in Vector2Int size)
+        {
+            if (pos.x < 0 || pos.y < 0)
+                return false;
+            
+            RectInt rectInt = new(pos, size);
+            
+            for (int x = rectInt.x; x < rectInt.xMax; x++)
+            {
+                for (int y = rectInt.y; y < rectInt.yMax; y++)
+                {
+                    if (x >= Width || y >= Height)
+                        return false;
+                }
+            }
+
+            return true;
+        }
 
         void Add(Vector2Int p, Item i, bool callEvent = true)
         {
@@ -382,7 +407,6 @@ namespace Inventories
 
             _items.Add(i, p);
             _cells.Set(rectInt, i);
-            
             if (callEvent)
                 OnAdded?.Invoke( i, p );
         }
@@ -447,6 +471,12 @@ namespace Inventories
                 AddItem( i.Item1, i.Item2 );
             }
         }
+
+        void ClearInventory()
+        {
+            _items.Clear();
+            _cells = new Item[Width, Height];
+        }
     }
     
     public static class ItemExt
@@ -455,10 +485,47 @@ namespace Inventories
 
         public static Vector2Int[] ToArray(this RectInt r)
         {
-            return r.Iterate()
-                .OrderBy(pos => pos.x)
-                .ThenBy(pos => pos.y)
-                .ToArray();
+            Vector2Int[] points = new Vector2Int[r.width * r.height];
+            
+            int index = 0;
+            
+            for (int x = r.x; x < r.xMax; x++)
+                for (int y = r.y; y < r.yMax; y++)
+                    points[index++] = new Vector2Int(x, y);
+
+            return points;
         }
     }
+
+    public static class MatrixExt
+    {
+        public static void Set<T>(this T[,] matrix, RectInt r, T item )
+        {
+            for (int x = r.x; x < r.xMax; x++)
+                for (int y = r.y; y < r.yMax; y++)
+                    matrix[x, y] = item;
+        }
+        
+        public static bool Is<T>(this T[,] matrix, RectInt r, T item ) where T : class
+        {
+            for (int x = r.x; x < r.xMax; x++)
+            {
+                for (int y = r.y; y < r.yMax; y++)
+                {
+                    var isMap = x >= 0 && x < matrix.GetLength(0) && y >= 0 && y < matrix.GetLength(1);
+                    var isSame = matrix[x, y] != item;
+                    
+                    if (!isMap || isSame)
+                        return false;
+                }
+            }
+
+            return true;
+        }
+        
+        public static bool LessThan(this Vector2Int vector, int value)
+        {
+            return vector.x < value || vector.y < value;
+        }
+    } 
 }
