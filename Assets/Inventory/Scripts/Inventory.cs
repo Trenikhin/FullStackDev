@@ -166,14 +166,7 @@ namespace Inventories
         /// </summary>
         public bool Contains(in Item item)
         {
-            if (item == null)
-                return false;
-            
-            foreach (var p in _cells)
-                if (_cells.IsSafe( p, item ) && item.Equals(_cells.Get(p)))
-                    return true;
-           
-            return false;
+            return item != null && _items.ContainsKey(item);
         }
 
         /// <summary>
