@@ -136,9 +136,6 @@ namespace Inventories
             if (size.LessThan(1 ))
                 throw new ArgumentException("Size cannot be less than 1");
             
-            bool found      = false;
-            freePosition    = default;
-            
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
@@ -148,17 +145,13 @@ namespace Inventories
                     if (IsFree(p, size))
                     {
                         freePosition = p;
-                        found = true;
-                        break;
+                        return true;
                     }
-                }
-                if (found)
-                {
-                    break;
                 }
             }
             
-            return found;
+            freePosition    = default;
+            return false;
         }
 
         /// <summary>
