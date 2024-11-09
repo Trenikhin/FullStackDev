@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using System.ComponentModel.Design.Serialization;
 	using System.Linq;
+	using R3;
 
 	[System.Serializable]
 	public class ConvertOperation
@@ -26,6 +27,8 @@
 		public int InputAmount = 3;
 		public int OutputAmount = 1;
 		public float ConvertTime = 1;
+		public ObjConfig InputMaterial;
+		public ObjConfig OutputMaterial;
 		
 		// Setup convertables
 		public List<ConvertOperation> ConvertOperations = new List<ConvertOperation>()
@@ -81,15 +84,28 @@
 		public ObjType GetObj() => new ObjType( Name, 1 );
 	}
 	
-	public struct ObjStack
+	public class ObjStack
 	{
-		public ObjType ObjType { get; private set; }
+		ReactiveProperty<int> _amountRx;
+		
 		public int Amount { get; private set; }
+		public int Capacity { get; private set; }
 
-		public ObjStack(ObjType objType, int amount)
+		public ReadOnlyReactiveProperty<int> AmountRx;
+		
+		public ObjStack( int amount, int capacity)
 		{
-			ObjType = objType;
-			Amount = amount;
+			Amount		= amount;
+			Capacity	= capacity;
+
+			_amountRx	= new ReactiveProperty<int>(Amount);
+			AmountRx	= _amountRx;
+		}
+
+		public void SetAmount(int amount)
+		{
+			Amount = (int)MathF.Min(Capacity, amount);
+			_amountRx.Value = Amount;
 		}
 	}
 	

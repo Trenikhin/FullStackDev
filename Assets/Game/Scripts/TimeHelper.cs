@@ -4,14 +4,14 @@
 
 	public interface ITimeHelper
 	{
-		TimeSpan SetTimeEnd(TimeSpan timeEnd);
+		TimeSpan GetTimeEnd(TimeSpan timeEnd);
 		
 		bool IsTimeEnd(TimeSpan endTime);
 	}
 	
 	public class TimeHelper : ITimeHelper
 	{
-		public TimeSpan SetTimeEnd( TimeSpan timeEnd )
+		public TimeSpan GetTimeEnd( TimeSpan timeEnd )
 		{
 			return TimeSpan.FromSeconds( DateTime.UtcNow.Ticks + timeEnd.Ticks );
 		}

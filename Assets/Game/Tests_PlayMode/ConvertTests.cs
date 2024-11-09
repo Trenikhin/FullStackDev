@@ -52,7 +52,7 @@ public class ConvertTests
         int expectedRawBeforeConversion = converter.RawMaterialsAmount + amount - expectedExtra;
         int expectedConvertedBeforeConversion = 0;
         
-        converter.Push( rawMaterials, out var outOfCapacity );
+        converter.PushRaw( rawMaterials, out var outOfCapacity );
         
         Assert.IsTrue( outOfCapacity == expectedExtra );
         Assert.IsTrue( converter.RawCapacity == expectedRawBeforeConversion );
@@ -87,7 +87,7 @@ public class ConvertTests
         int expectedRawBeforeConversion = converter.RawMaterialsAmount + amount - expectedExtra;
         int expectedConvertedBeforeConversion = 0;
         
-        converter.Push( rawMaterials, out var outOfCapacity );
+        converter.PushRaw( rawMaterials, out var outOfCapacity );
         
         Assert.IsTrue( outOfCapacity == expectedExtra );
         Assert.IsTrue( converter.RawCapacity == expectedRawBeforeConversion );
@@ -99,7 +99,7 @@ public class ConvertTests
         var cycle1ExpectedRaw = Mathf.Max( expectedRawBeforeConversion - converter.CycleInput, 0 );
         var cycle1ExpectedConverted = Mathf.Max(expectedRawBeforeConversion + converter.CycleOutput, 0);
         
-        var output = converter.Pull( 1 );
+        var output = converter.PullConverted( 1 );
         
         Assert.IsTrue( output.Amount == 1 );
         Assert.IsTrue( output.ObjType == CreatePlank() );
