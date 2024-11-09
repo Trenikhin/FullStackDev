@@ -5,12 +5,19 @@
 	using R3;
 
 	/// <summary>
-	/// UTF-8
+	/// UTF-8 - ReadMe
 	/// Базовый конвертер - перерабатывает что угодно во что угодоно.
-	/// В Тз делался акцент именно на конвертации бревен в доски, но по сути для реализации логики конвертера тип материала не имеет значения
+	/// В ТЗ делался акцент именно на конвертации бревен в доски, но по сути для реализации логики конвертера тип материала не имеет значения
 	/// Исходя из этого было принято решение пренебречь типом материала, тем самым упростив решение. 
 	/// Также это позволит воспользоваться паттерном 'Decorator' чтобы расширить функционал и сделать конвертацию под любой тип по необходимости.
 	/// </summary>
+	/// <summary>
+	/// Basic converter - converts anything.
+	/// The TOR emphasized the conversion of logs into boards, but in essence, the type of material does not matter for the converter logic implementation
+	/// Therefore it was decided to ignore the material type, thus simplifying the solution. 
+	/// It will also allow to use the 'Decorator' pattern to extend the functionality and make conversion to any type as needed.
+	/// </summary>
+	
 	public interface IObjConverter
 	{
 		public bool IsOn {get;}
