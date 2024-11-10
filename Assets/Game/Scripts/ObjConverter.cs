@@ -1,22 +1,11 @@
 ﻿namespace Game.Scripts
 {
 	using System;
+	using Codice.Client.Commands.WkTree;
 	using UnityEngine;
 	using R3;
-
-	/// <summary>
-	/// UTF-8 - ReadMe
-	/// Базовый конвертер - перерабатывает что угодно во что угодоно.
-	/// В ТЗ делался акцент именно на конвертации бревен в доски, но по сути для реализации логики конвертера тип материала не имеет значения
-	/// Исходя из этого было принято решение пренебречь типом материала, тем самым упростив решение. 
-	/// Также это позволит воспользоваться паттерном 'Decorator' чтобы расширить функционал и сделать конвертацию под любой тип по необходимости.
-	/// </summary>
-	/// <summary>
-	/// Basic converter - converts anything.
-	/// The TOR emphasized the conversion of logs into boards, but in essence, the type of material does not matter for the converter logic implementation
-	/// Therefore it was decided to ignore the material type, thus simplifying the solution. 
-	/// It will also allow to use the 'Decorator' pattern to extend the functionality and make conversion to any type as needed.
-	/// </summary>
+	using UnityEngine.UI;
+	using Toggle = UnityEngine.UIElements.Toggle;
 	
 	public interface IObjConverter
 	{
@@ -41,41 +30,54 @@
 	
 	public class ObjConverter : IInitializable, IDisposable, IObjConverter
 	{
-		// Configs
-		ConvertConfig _config;
-		
 		// Services
 		ITimeHelper _timeHelper;
 		
 		readonly ObjStack _raw;
 		readonly ObjStack _inProgress;
 		readonly ObjStack _converted;
+
+		TimeSpan _cycleEndTime;
 		
-		public int RawCapacity => _raw.Capacity;
 		public int RawMaterialsAmount => _raw.Amount;
-		public int ConvertedCapacity => _converted.Capacity;
+		public int RawCapacity { get; private set; }
 		public int ConvertedMaterialsAmount => _converted.Amount;
+		public int ConvertedCapacity { get; private set; }
+		public int CycleInput { get; private set; }
+		public int CycleOutput { get; private set; }
+		
 		
 		public TimeSpan ConvertTime { get; private set; }
-		public int CycleInput => _config.InputAmount;
-		public int CycleOutput => _config.OutputAmount;
 		
 		CompositeDisposable _disposables = new ();
 		
 		ReactiveProperty<bool> _isConverting = new (false);
 		ReactiveProperty<bool> _isOn = new (false);
 		
-		public ObjConverter( ConvertConfig config, ITimeHelper timeHelper )
+		public ObjConverter // in a real game it might be a 'ConvertedConfig' instead of arguments (convertedAmount ..convertTime)
+		(
+			int convertedAmount,
+			int convertedCapacity,
+			int rawAmount,
+			int rawCapacity,
+			int cycleInput,
+			int cycleOutput,
+			float convertTime,
+			ITimeHelper timeHelper
+		)
 		{
-			_config			= config;
-			_timeHelper		= timeHelper;
+			ConvertedCapacity = convertedCapacity;
+			RawCapacity = rawCapacity;
+			CycleInput = cycleInput;
+			CycleOutput = cycleOutput;
 			
-			ConvertTime		= _timeHelper.GetTimeEnd( TimeSpan.FromSeconds( _config.ConvertTime ) );
+			_timeHelper	= timeHelper;
+			ConvertTime	= TimeSpan.FromSeconds( convertTime );
 			
-			_raw			= new ObjStack( 0, config.RawMaterialsCapacity);
-			_inProgress		= new ObjStack( 0, config.InputAmount);
-			_converted		= new ObjStack( 0, config.ConvertedMaterialsCapacity);
-
+			_raw = new ObjStack( rawAmount, RawCapacity);
+			_inProgress = new ObjStack( 0, cycleInput);
+			_converted = new ObjStack( convertedAmount, ConvertedCapacity);
+			
 			//Initialize(); // Just for tests
 		}
 		
@@ -86,7 +88,6 @@
 
 		public void Dispose()
 		{
-			Debug.Log("Dispose");
 			_disposables?.Dispose();
 		}
 
@@ -99,13 +100,21 @@
 
 		public void PushRaw( int rawMaterials, out int outOfCapacity)
 		{
-			_raw.SetAmount( rawMaterials );
+			if (rawMaterials <= 0)
+				throw new ArgumentException("Raw materials must be greater than 0");
 			
-			outOfCapacity = 1;
+			outOfCapacity = RawCapacity - (rawMaterials + RawMaterialsAmount);
+			
+			_raw.SetAmount( rawMaterials );
 		}
 		
 		public int PullConverted(int amount)
 		{
+			if (amount <= 0)
+				throw new ArgumentException("Amount must be greater than 0");
+			if (amount > ConvertedMaterialsAmount)
+				throw new ArgumentException("Amount is greater than the converted materials amount");
+			
 			return _converted.Amount;
 		}
 		
@@ -139,6 +148,8 @@
 		{
 			EnterCycle();
 			
+			_cycleEndTime = _timeHelper.GetTimeEnd( ConvertTime );
+			
 			// Start cycle ticks
 			Observable
 				.EveryUpdate()
@@ -165,7 +176,7 @@
 		{
 			_isConverting.Value = true;
 			
-			int inProgressAmount	= _config.InputAmount;
+			int inProgressAmount	= CycleInput;
 			int remainingRaw		= RawMaterialsAmount - inProgressAmount;
 			
 			_raw.SetAmount( inProgressAmount );
@@ -180,12 +191,12 @@
 
 		void ExitCycle()
 		{
-			_converted.SetAmount( _config.OutputAmount );
+			_converted.SetAmount( CycleOutput );
 			
 			_isConverting.Value = false;
 		}
 
-		bool IsTimeEnd() => _timeHelper.IsTimeEnd( ConvertTime );
+		bool IsTimeEnd() => _timeHelper.IsTimeEnd( _cycleEndTime );
 		
 		bool CanStartCycle( bool isOn, bool isAlreadyConverting, int rawMaterialsAmount, int amountTgt )
 		{
