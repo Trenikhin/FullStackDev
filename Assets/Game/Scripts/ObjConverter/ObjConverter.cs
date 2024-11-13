@@ -105,7 +105,8 @@
 				.AddTo(_disposables);
 
 			// Stop Cycle
-			_isOn
+			Observable
+				.Merge( _isOn, _isRecycling )
 				.Where(_ => !_isOn.Value && _isRecycling.Value)
 				.Subscribe( _ => _cts?.Cancel() )
 				.AddTo(_disposables);
