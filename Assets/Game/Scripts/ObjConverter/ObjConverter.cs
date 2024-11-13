@@ -85,17 +85,17 @@
 			Observable
 				.Merge
 				(
-					_isOn.AsUnitObservable(),
-					_isRecycling.AsUnitObservable(),
+					_isOn.AsUnitObservable(), 
+					_isRecycling.AsUnitObservable(), 
 					_raw.AmountRx.AsUnitObservable(),
 					_converted.AmountRx.AsUnitObservable()
 				)
 				.Where
-				(v => 
-						_isOn.Value && // IsOn													
-						!_isRecycling.Value && // Not converting
-						RawMaterialsAmount >= CycleInput && // Enough materials
-						ConvertedMaterialsAmount + CycleOutput <= ConvertedCapacity // Enough capacity
+				(_ => // Start cycle condition:
+					_isOn.Value && // IsOn													
+					!_isRecycling.Value && // Not converting
+					RawMaterialsAmount >= CycleInput && // Enough materials
+					ConvertedMaterialsAmount + CycleOutput <= ConvertedCapacity // Enough capacity
 				)
 				.Subscribe( _ =>
 				{
