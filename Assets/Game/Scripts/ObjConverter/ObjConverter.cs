@@ -91,8 +91,8 @@
 				)
 				.Where
 				(v => 
-						_isOn.Value && // isOn													
-						!_isRecycling.Value && // not converting
+						_isOn.Value && // IsOn													
+						!_isRecycling.Value && // Not converting
 						RawMaterialsAmount >= CycleInput && // Enough materials
 						ConvertedMaterialsAmount + CycleOutput <= ConvertedCapacity // Enough capacity
 				)
