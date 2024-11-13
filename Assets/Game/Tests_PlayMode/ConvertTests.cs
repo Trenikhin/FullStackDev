@@ -182,4 +182,43 @@ public class ConvertTests
         Assert.AreEqual( expectedRawMaterials, converter.RawMaterialsAmount );
         Assert.AreEqual( expectedConvertedMaterials, converter.ConvertedMaterialsAmount );
     }
+    
+    [UnityTest]
+    public IEnumerator TestConverterStopAndStart_1()
+    {
+        int pushAmount = Config.InputAmount * 4;
+        yield return TestConverterStopAndStart(Config, pushAmount);
+    }
+    
+    [UnityTest]
+    public IEnumerator TestConverterStopAndStart_2()
+    {
+        int pushAmount = Config.InputAmount * 2;
+        yield return TestConverterStopAndStart(Config, pushAmount);
+    }
+    
+    IEnumerator TestConverterStopAndStart( ConvertConfig cfg, int pushAmount )
+    {
+        var converter = new ObjConverter( Config, false );
+        
+        converter.PushRaw( pushAmount, out int _ );
+        converter.Toggle( true );
+        
+        yield return new WaitForSeconds( cfg.ConvertTime + 0.1f );
+        
+        converter.Toggle( false );
+        
+        yield return new WaitForSeconds( 0.1f );
+        
+        converter.Toggle( true );
+        
+        int cycles = Mathf.FloorToInt(pushAmount / (float)cfg.InputAmount);
+        int expectedRawMaterials = (Mathf.Min( converter.RawCapacity, pushAmount )) - (cycles * cfg.InputAmount);
+        int expectedConvertedMaterials = cycles * cfg.OutputAmount;
+       
+        yield return new WaitForSeconds( cfg.ConvertTime * cycles + 0.1f );
+        
+        Assert.AreEqual( expectedRawMaterials, converter.RawMaterialsAmount );
+        Assert.AreEqual( expectedConvertedMaterials, converter.ConvertedMaterialsAmount );
+    }
 }
