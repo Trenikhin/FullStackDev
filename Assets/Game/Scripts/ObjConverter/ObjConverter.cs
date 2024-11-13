@@ -8,10 +8,11 @@
 	
 	public class ObjConverter : IDisposable
 	{
-		readonly ReactiveProperty<bool> _isRecycling;
-		readonly ReactiveProperty<bool> _isOn;
+		readonly ConvertConfig _config;
 		readonly ObjStack _raw;
 		readonly ObjStack _converted;
+		readonly ReactiveProperty<bool> _isRecycling;
+		readonly ReactiveProperty<bool> _isOn;
 		
 		CancellationTokenSource _cts;
 		
@@ -53,12 +54,12 @@
 #region IObjConverter
 
 		public int RawMaterialsAmount => _raw.Amount;
-		public int RawCapacity { get; private set; }
 		public int ConvertedMaterialsAmount => _converted.Amount;
-		public int ConvertedCapacity { get; private set; }
-		public TimeSpan ConvertTime { get; private set; }
-		public int CycleInput { get; private set; }
-		public int CycleOutput { get; private set; }
+		public int RawCapacity { get; }
+		public int ConvertedCapacity { get; }
+		public TimeSpan ConvertTime { get; }
+		public int CycleInput { get; }
+		public int CycleOutput { get; }
 		public bool IsOn => _isOn.Value;
 		
 		public void Toggle(bool isOn) => _isOn.Value = isOn;
