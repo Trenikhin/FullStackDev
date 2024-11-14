@@ -48,7 +48,7 @@ public class ConvertTests
     {
         var converter = new ObjConverter( Config, false );
         
-        Assert.Catch<ArgumentException>(() => converter.PushRaw( -1, out int _ ));
+        Assert.Catch<ArgumentException>(() => converter.TryTake( -1, out int _ ));
     }
     
     [Test]
@@ -77,7 +77,7 @@ public class ConvertTests
         
         ObjConverter converter = new ObjConverter( cfg, false );
         converter.Toggle( false );
-        converter.PushRaw( pushingMaterials, out int extra );
+        converter.TryTake( pushingMaterials, out int extra );
        
         Assert.AreEqual( expectedExtras, extra );
     }
@@ -111,7 +111,7 @@ public class ConvertTests
         int expectedConvertedMaterials = cycles * cfg.OutputAmount;
         var converter = new ObjConverter( Config, false );
         
-        converter.PushRaw( pushAmount, out int outOfCapacity );
+        converter.TryTake( pushAmount, out int outOfCapacity );
         
         Assert.IsTrue( converter.RawMaterialsAmount == pushAmount );
         Assert.IsTrue( converter.ConvertedMaterialsAmount == 0 );
@@ -155,12 +155,12 @@ public class ConvertTests
     {
         var converter = new ObjConverter( Config, false );
         
-        converter.PushRaw( pushAmount, out int _ );
+        converter.TryTake( pushAmount, out int _ );
         converter.Toggle( true );
         
         yield return new WaitForSeconds(  cfg.ConvertTime / 5 );
         
-        converter.PushRaw( pushAmount, out int _ );
+        converter.TryTake( pushAmount, out int _ );
         
         yield return new WaitForSeconds(  cfg.ConvertTime / 5 );
         
@@ -201,7 +201,7 @@ public class ConvertTests
     {
         var converter = new ObjConverter( Config, false );
         
-        converter.PushRaw( pushAmount, out int _ );
+        converter.TryTake( pushAmount, out int _ );
         converter.Toggle( true );
         
         yield return new WaitForSeconds( cfg.ConvertTime + 0.1f );

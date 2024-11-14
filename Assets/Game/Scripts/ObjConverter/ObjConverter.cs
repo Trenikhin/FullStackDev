@@ -58,7 +58,7 @@
 		
 		public void Toggle(bool isOn) => _isOn.Value = isOn;
 
-		public void PushRaw( int rawMaterials, out int outOfCapacity)
+		public void TryTake( int rawMaterials, out int outOfCapacity)
 		{
 			if (rawMaterials <= 0)
 				throw new ArgumentException("Raw materials must be greater than 0");
