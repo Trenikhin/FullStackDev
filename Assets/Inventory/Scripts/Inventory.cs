@@ -131,7 +131,7 @@ namespace Inventories
 
         public bool FindFreePosition(in Vector2Int size, out Vector2Int freePosition)
         {
-            if (size.LessThan(1 ))
+            if (LessThan(size, 1 ))
                 throw new ArgumentException("Size cannot be less than 1");
             
             for (int y = 0; y < Height; y++)
@@ -232,7 +232,7 @@ namespace Inventories
 
         public bool TryGetItem(in Vector2Int position, out Item item)
         {
-            if (!InMap(position, Vector2Int.one) || IsFree(position))
+            if (!InBounds(position, Vector2Int.one) || IsFree(position))
             {
                 item = default;
                 return false;   
@@ -373,27 +373,18 @@ namespace Inventories
         {
             RectInt rectInt = new RectInt( pos, size );
             
-            return InMap(pos, size)               &&
-                   _cells.Is(rectInt, null);
+            return InBounds(pos, size) && 
+                   Is(_cells, rectInt, null);
         }
 
-        bool InMap(in Vector2Int pos, in Vector2Int size)
+        bool InBounds(in Vector2Int pos, in Vector2Int size)
         {
-            if (pos.x < 0 || pos.y < 0)
-                return false;
-            
             RectInt rectInt = new(pos, size);
             
-            for (int x = rectInt.x; x < rectInt.xMax; x++)
-            {
-                for (int y = rectInt.y; y < rectInt.yMax; y++)
-                {
-                    if (x >= Width || y >= Height)
-                        return false;
-                }
-            }
-
-            return true;
+            return !(rectInt.x < 0 ||
+                    rectInt.y < 0 ||
+                    rectInt.xMax > Width ||
+                    rectInt.yMax > Height);
         }
 
         void Add(Vector2Int p, Item i, bool callEvent = true)
@@ -401,7 +392,7 @@ namespace Inventories
             RectInt rectInt     = i.GetRect( p );
 
             _items.Add(i, p);
-            _cells.Set(rectInt, i);
+            Set(_cells, rectInt, i);
             
             if (callEvent)
                 OnAdded?.Invoke( i, p );
@@ -413,7 +404,7 @@ namespace Inventories
             RectInt r         = i.GetRect( p );
             
             _items.Remove(i);
-            _cells.Set(r, null);
+            Set(_cells, r, null);
             
             if (callEvent)
                 OnRemoved?.Invoke( i, p );
@@ -435,7 +426,7 @@ namespace Inventories
                 return false;   
             }
 
-            if (item.Size.LessThan(1))
+            if (LessThan(item.Size, 1))
                 throw new ArgumentException();
             
             return FindFreePosition(item, out p);
@@ -474,6 +465,35 @@ namespace Inventories
             _items.Clear();
             _cells = new Item[Width, Height];
         }
+        
+        void Set( Item[,] matrix, RectInt r, Item item )
+        {
+            for (int x = r.x; x < r.xMax; x++)
+            for (int y = r.y; y < r.yMax; y++)
+                matrix[x, y] = item;
+        }
+        
+        bool Is<T>( T[,] matrix, RectInt r, T item ) where T : class
+        {
+            for (int x = r.x; x < r.xMax; x++)
+            {
+                for (int y = r.y; y < r.yMax; y++)
+                {
+                    var isMap = x >= 0 && x < matrix.GetLength(0) && y >= 0 && y < matrix.GetLength(1);
+                    var isSame = matrix[x, y] != item;
+                    
+                    if (!isMap || isSame)
+                        return false;
+                }
+            }
+
+            return true;
+        }
+        
+        bool LessThan( Vector2Int vector, int value)
+        {
+            return vector.x < value || vector.y < value;
+        }
     }
     
     public static class ItemExt
@@ -493,36 +513,4 @@ namespace Inventories
             return points;
         }
     }
-
-    public static class MatrixExt
-    {
-        public static void Set<T>(this T[,] matrix, RectInt r, T item )
-        {
-            for (int x = r.x; x < r.xMax; x++)
-                for (int y = r.y; y < r.yMax; y++)
-                    matrix[x, y] = item;
-        }
-        
-        public static bool Is<T>(this T[,] matrix, RectInt r, T item ) where T : class
-        {
-            for (int x = r.x; x < r.xMax; x++)
-            {
-                for (int y = r.y; y < r.yMax; y++)
-                {
-                    var isMap = x >= 0 && x < matrix.GetLength(0) && y >= 0 && y < matrix.GetLength(1);
-                    var isSame = matrix[x, y] != item;
-                    
-                    if (!isMap || isSame)
-                        return false;
-                }
-            }
-
-            return true;
-        }
-        
-        public static bool LessThan(this Vector2Int vector, int value)
-        {
-            return vector.x < value || vector.y < value;
-        }
-    } 
 }
