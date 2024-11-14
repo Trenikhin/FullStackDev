@@ -15,7 +15,5 @@
 		public int InputAmount = 3;
 		public int OutputAmount = 1;
 		public float ConvertTime = 1;
-
-		ReactiveProperty<int> SomeValue = new ReactiveProperty<int>();
 	}
 }
