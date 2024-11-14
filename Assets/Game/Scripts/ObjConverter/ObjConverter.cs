@@ -1,8 +1,6 @@
 ﻿namespace Game.Obj
 {
-	using Cysharp.Threading.Tasks;
 	using System;
-	using System.Threading;
 	using Configs;
 	using R3;
 	
@@ -11,10 +9,8 @@
 		readonly ConvertConfig _config;
 		readonly ObjStack _raw;
 		readonly ObjStack _converted;
-		readonly ReactiveProperty<bool> _isRecycling;
 		readonly ReactiveProperty<bool> _isOn;
-		
-		CancellationTokenSource _cts;
+		readonly RecyclingTimer _timer;
 		
 		// Lifetime
 		readonly CompositeDisposable _disposables = new ();
@@ -32,9 +28,9 @@
 			
 			_raw = new ObjStack( 0, RawCapacity);
 			_converted = new ObjStack( 0, ConvertedCapacity);
-
+			_timer = new RecyclingTimer();
+			
 			_isOn = new ReactiveProperty<bool>(isOn);
-			_isRecycling = new ReactiveProperty<bool>();
 			
 			Initialize(); // Just for tests
 		}
@@ -47,8 +43,6 @@
 		public void Dispose()
 		{
 			_disposables?.Dispose();
-			_cts?.Cancel();
-			_cts?.Dispose();
 		}
 		
 #region IObjConverter
@@ -86,50 +80,39 @@
 				.Merge
 				(
 					_isOn.AsUnitObservable(), 
-					_isRecycling.AsUnitObservable(), 
+					_timer.State.AsUnitObservable(), 
 					_raw.AmountRx.AsUnitObservable(),
 					_converted.AmountRx.AsUnitObservable()
 				)
 				.Where
 				(_ => // Start cycle condition:
 					_isOn.Value && // IsOn													
-					!_isRecycling.Value && // Not converting
+					_timer.State.CurrentValue != ETimerState.Running && // Not converting
 					RawMaterialsAmount >= CycleInput && // Enough materials
 					ConvertedMaterialsAmount + CycleOutput <= ConvertedCapacity // Enough capacity
 				)
-				.Subscribe( _ =>
-				{
-					_cts = new CancellationTokenSource();
-					StartRecyclingProcess(_cts.Token).Forget();
-				})
+				.Subscribe( _ => _timer.Start( ConvertTime ) )
 				.AddTo(_disposables);
 
 			// Stop Cycle
 			Observable
-				.Merge( _isOn, _isRecycling )
-				.Where(_ => !_isOn.Value && _isRecycling.Value)
-				.Subscribe( _ => _cts?.Cancel() )
+				.Merge( _isOn.AsUnitObservable(), _timer.State.AsUnitObservable() )
+				.Where(_ => !_isOn.Value && _timer.State.CurrentValue == ETimerState.Running)
+				.Subscribe( _ => _timer.Stop() )
 				.AddTo(_disposables);
-		}
-				
-		async UniTaskVoid StartRecyclingProcess( CancellationToken ct )
-		{
-			_isRecycling.Value = true;
-			StartRecycling();
-
-			try
-			{
-				await UniTask.Delay(ConvertTime, cancellationToken: ct);
-				FinishRecycling();
-			}
-			catch (OperationCanceledException)
-			{
-				StopRecycling();
-			}
-			finally
-			{
-				_isRecycling.Value = false;
-			}
+			
+			// Handle Cycle
+			_timer.State
+				.Subscribe( s =>
+				{
+					switch (s)
+					{
+						case ETimerState.Running:	StartRecycling(); break;
+						case ETimerState.Ready:		FinishRecycling(); break;
+						case ETimerState.Stopped:	StopRecycling(); break;
+					}
+				})
+				.AddTo(_disposables);
 		}
 
 		void StartRecycling()
