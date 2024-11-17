@@ -115,7 +115,7 @@
 
 		void ReduceTime(float delta) => SetTimeLeft( _remainingTime - delta );
 		bool IsRecyclingEnd() => _remainingTime <= 0;
-		void SetTimeLeft(float sec)	=> _remainingTime = sec;
+		void SetTimeLeft(float sec) => _remainingTime = sec;
 		
 #endregion
 	}
