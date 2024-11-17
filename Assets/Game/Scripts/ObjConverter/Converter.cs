@@ -2,7 +2,6 @@
 {
 	using System;
 	using Configs;
-	using UnityEngine;
 
 	public class Converter
 	{
@@ -32,6 +31,10 @@
 			ConvertedCapacity			= config.ConvertedMaterialsCapacity;
 			ConvertTime					= config.ConvertTime;
 			IsOn						= isOn;
+
+			// for enter from save: not implemented yet
+			_isRecycling			= false;
+			_remainingTime			= 0;
 		}
 		
 		public bool IsOn						{get; private set;}
@@ -66,10 +69,10 @@
 		
 		public bool TryStartRecycle()
 		{
-			if (!_isRecycling					||
-			    !IsOn							||
-			    RawMaterialsAmount < CycleInput		||
-			    ConvertedMaterialsAmount >= ConvertedCapacity )
+			if (_isRecycling ||
+			    !IsOn ||
+			    RawMaterialsAmount < CycleInput	||
+			    ConvertedMaterialsAmount + CycleOutput >= ConvertedCapacity )
 				return false;
 			
 			_isRecycling				= true;
@@ -84,9 +87,6 @@
 				
 		public void TickRecycling( float deltaTime ) // deltaTime: time(in sec) since last Tick
 		{
-			if (!_isRecycling)
-				throw new Exception("Can't tick if recycling not started");
-			
 			ReduceTime( deltaTime );
 		}
 		
