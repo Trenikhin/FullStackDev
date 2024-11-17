@@ -29,7 +29,7 @@
 			RawCapacity = config.RawMaterialsCapacity;
 			ConvertedMaterialsAmount = convertedAmount;
 			ConvertedCapacity = config.ConvertedMaterialsCapacity;
-			ConvertTime	= config.ConvertTime;
+			ConvertTime = config.ConvertTime;
 			IsOn = isOn;
 
 			// for enter from save: not implemented yet
