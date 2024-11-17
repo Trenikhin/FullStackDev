@@ -5,8 +5,6 @@
 
 	public class Converter
 	{
-		readonly ConvertConfig _config;
-
 		bool	_isRecycling;
 		float	_remainingTime;
 		
@@ -19,28 +17,26 @@
 			if ( convertedAmount > config.ConvertedMaterialsCapacity )
 				throw new ArgumentException( "The input amount is out of range.", nameof(convertedAmount) );
 			
-			ConvertedCapacity	= config.ConvertedMaterialsCapacity;
-			RawCapacity			= config.RawMaterialsCapacity;
-			CycleInput			= config.InputAmount;
-			CycleOutput			= config.OutputAmount;
-			ConvertTime			= TimeSpan.FromSeconds( config.ConvertTime );
-			
+			ConvertedCapacity			= config.ConvertedMaterialsCapacity;
+			RawCapacity					= config.RawMaterialsCapacity;
+			CycleInput					= config.InputAmount;
+			CycleOutput					= config.OutputAmount;
 			RawMaterialsAmount			= rawAmount;
 			RawCapacity					= config.RawMaterialsCapacity;
 			ConvertedMaterialsAmount	= convertedAmount;
 			ConvertedCapacity			= config.ConvertedMaterialsCapacity;
-			
-			IsOn				= isOn;
+			ConvertTime					= TimeSpan.FromSeconds( config.ConvertTime );
+			IsOn						= isOn;
 		}
 		
-		public int RawMaterialsAmount { get; private set; }
-		public int RawCapacity { get; private set; }
-		public int ConvertedMaterialsAmount { get; private set; }
-		public int ConvertedCapacity { get; private set; }
-		public TimeSpan ConvertTime { get; private set; }
-		public int CycleInput { get; private set; }
-		public int CycleOutput { get; private set; }
-		public bool IsOn { get; private set; }
+		public bool IsOn						{get; private set;}
+		public int RawMaterialsAmount			{get; private set;}
+		public int ConvertedMaterialsAmount		{get; private set;}
+		public int RawCapacity					{get;}
+		public int ConvertedCapacity			{get;}
+		public int CycleInput					{get;}
+		public int CycleOutput					{get;}
+		public TimeSpan ConvertTime				{get;}
 		
 		public void Toggle(bool isOn)
 		{
@@ -72,22 +68,21 @@
 				return false;
 			
 			_isRecycling				= true;
-			
 			int inProgressAmount		= CycleInput;
 			int remainingRaw			= RawMaterialsAmount - inProgressAmount;
-
 			RawMaterialsAmount			= remainingRaw;
-			_remainingTime				= (float)ConvertTime.TotalSeconds;
+			
+			SetTimeLeft((float)ConvertTime.TotalSeconds);;
 			
 			return true;
 		}
 				
-		public void TickRecycling( float deltaTime ) // deltaTime: time(in sec) since last update
+		public void TickRecycling( float deltaTime ) // deltaTime: time(in sec) since last Tick
 		{
 			if (!_isRecycling)
 				throw new Exception("Can't tick if recycling not started");
 			
-			_remainingTime -= deltaTime;
+			ReduceTime( deltaTime );
 		}
 		
 		public void StopRecycling()
@@ -95,18 +90,28 @@
 			if (!_isRecycling)
 				throw new Exception("Can't stop recycling if not running");
 			
-			if (_remainingTime >= 0)
+			if (IsRecyclingEnd())
 			{
+				// Finish Recycling
 				ConvertedMaterialsAmount += CycleOutput;
 			}
 			else
 			{
+				// Not Finished yet
 				// When overflowed, out of capacity resources are "burned".
 				RawMaterialsAmount = Math.Min( RawCapacity, RawMaterialsAmount + CycleInput );
 			}
 
-			_remainingTime	= 0;
+			SetTimeLeft(0);
 			_isRecycling	= false;
 		}
+
+#region TimeLogic
+
+		void ReduceTime(float delta)	=> SetTimeLeft( _remainingTime - delta );
+		bool IsRecyclingEnd()			=> _remainingTime <= 0;
+		void SetTimeLeft(float sec)		=> _remainingTime = sec;
+		
+#endregion
 	}
 }
