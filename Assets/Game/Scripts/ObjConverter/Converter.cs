@@ -5,8 +5,8 @@
 
 	public class Converter
 	{
-		bool	_isRecycling;
-		float	_remainingTime;
+		bool _isRecycling;
+		float _remainingTime;
 		
 		public Converter(ConvertConfig config, int rawAmount = 0, int convertedAmount = 0, bool isOn = false)
 		{
@@ -21,30 +21,30 @@
 			if ( convertedAmount < 0 )
 				throw new ArgumentException( "The input amount is negative.", nameof(convertedAmount) );
 			
-			ConvertedCapacity			= config.ConvertedMaterialsCapacity;
-			RawCapacity					= config.RawMaterialsCapacity;
-			CycleInput					= config.InputAmount;
-			CycleOutput					= config.OutputAmount;
-			RawMaterialsAmount			= rawAmount;
-			RawCapacity					= config.RawMaterialsCapacity;
-			ConvertedMaterialsAmount	= convertedAmount;
-			ConvertedCapacity			= config.ConvertedMaterialsCapacity;
-			ConvertTime					= config.ConvertTime;
-			IsOn						= isOn;
+			ConvertedCapacity = config.ConvertedMaterialsCapacity;
+			RawCapacity = config.RawMaterialsCapacity;
+			CycleInput = config.InputAmount;
+			CycleOutput = config.OutputAmount;
+			RawMaterialsAmount = rawAmount;
+			RawCapacity = config.RawMaterialsCapacity;
+			ConvertedMaterialsAmount = convertedAmount;
+			ConvertedCapacity = config.ConvertedMaterialsCapacity;
+			ConvertTime	= config.ConvertTime;
+			IsOn = isOn;
 
 			// for enter from save: not implemented yet
-			_isRecycling			= false;
-			_remainingTime			= 0;
+			_isRecycling = false;
+			_remainingTime = 0;
 		}
 		
-		public bool IsOn						{get; private set;}
-		public int RawMaterialsAmount			{get; private set;}
-		public int ConvertedMaterialsAmount		{get; private set;}
-		public int RawCapacity					{get;}
-		public int ConvertedCapacity			{get;}
-		public int CycleInput					{get;}
-		public int CycleOutput					{get;}
-		public float ConvertTime				{get;}
+		public bool IsOn {get; private set;}
+		public int RawMaterialsAmount {get; private set;}
+		public int ConvertedMaterialsAmount	{get; private set;}
+		public int RawCapacity {get;}
+		public int ConvertedCapacity {get;}
+		public int CycleInput {get;}
+		public int CycleOutput {get;}
+		public float ConvertTime {get;}
 		
 		public void Toggle(bool isOn)
 		{
@@ -75,10 +75,10 @@
 			    ConvertedMaterialsAmount + CycleOutput >= ConvertedCapacity )
 				return false;
 			
-			_isRecycling				= true;
-			int inProgressAmount		= CycleInput;
-			int remainingRaw			= RawMaterialsAmount - inProgressAmount;
-			RawMaterialsAmount			= remainingRaw;
+			_isRecycling = true;
+			int inProgressAmount = CycleInput;
+			int remainingRaw = RawMaterialsAmount - inProgressAmount;
+			RawMaterialsAmount = remainingRaw;
 			
 			SetTimeLeft(ConvertTime);
 			
@@ -108,14 +108,14 @@
 			}
 
 			SetTimeLeft(0);
-			_isRecycling	= false;
+			_isRecycling = false;
 		}
 
 #region TimeLogic
 
-		void ReduceTime(float delta)	=> SetTimeLeft( _remainingTime - delta );
-		bool IsRecyclingEnd()			=> _remainingTime <= 0;
-		void SetTimeLeft(float sec)		=> _remainingTime = sec;
+		void ReduceTime(float delta) => SetTimeLeft( _remainingTime - delta );
+		bool IsRecyclingEnd() => _remainingTime <= 0;
+		void SetTimeLeft(float sec)	=> _remainingTime = sec;
 		
 #endregion
 	}
