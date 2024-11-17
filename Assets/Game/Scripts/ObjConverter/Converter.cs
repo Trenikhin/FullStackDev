@@ -2,6 +2,7 @@
 {
 	using System;
 	using Configs;
+	using UnityEngine;
 
 	public class Converter
 	{
@@ -16,6 +17,10 @@
 				throw new ArgumentException( "The input amount is out of range.", nameof(rawAmount) );
 			if ( convertedAmount > config.ConvertedMaterialsCapacity )
 				throw new ArgumentException( "The input amount is out of range.", nameof(convertedAmount) );
+			if ( rawAmount < 0 )
+				throw new ArgumentException( "The input amount is negative.", nameof(rawAmount) );
+			if ( convertedAmount < 0 )
+				throw new ArgumentException( "The input amount is negative.", nameof(convertedAmount) );
 			
 			ConvertedCapacity			= config.ConvertedMaterialsCapacity;
 			RawCapacity					= config.RawMaterialsCapacity;
@@ -25,7 +30,7 @@
 			RawCapacity					= config.RawMaterialsCapacity;
 			ConvertedMaterialsAmount	= convertedAmount;
 			ConvertedCapacity			= config.ConvertedMaterialsCapacity;
-			ConvertTime					= TimeSpan.FromSeconds( config.ConvertTime );
+			ConvertTime					= config.ConvertTime;
 			IsOn						= isOn;
 		}
 		
@@ -36,7 +41,7 @@
 		public int ConvertedCapacity			{get;}
 		public int CycleInput					{get;}
 		public int CycleOutput					{get;}
-		public TimeSpan ConvertTime				{get;}
+		public float ConvertTime				{get;}
 		
 		public void Toggle(bool isOn)
 		{
@@ -72,7 +77,7 @@
 			int remainingRaw			= RawMaterialsAmount - inProgressAmount;
 			RawMaterialsAmount			= remainingRaw;
 			
-			SetTimeLeft((float)ConvertTime.TotalSeconds);;
+			SetTimeLeft(ConvertTime);
 			
 			return true;
 		}

@@ -1,10 +1,5 @@
 ﻿namespace Game.Configs
 {
-	using System;
-	using System.Collections.Generic;
-	using System.ComponentModel.Design.Serialization;
-	using System.Linq;
-	using R3;
 	using UnityEngine;
 
 	[CreateAssetMenu(fileName = "ConvertConfig", menuName = "Configs/ConvertConfig", order = 0)]
