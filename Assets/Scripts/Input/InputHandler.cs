@@ -1,4 +1,4 @@
-﻿namespace DefaultNamespace.Input
+﻿namespace Input
 {
 	using System;
 	using Modules;
@@ -10,7 +10,7 @@
 		public event Action<Vector2Int> OnDirectionChange;
 	}
 	
-	public class OldInputHandler : ITickable, IInputHandler
+	public class InputHandler : ITickable, IInputHandler
 	{
 		public event Action<Vector2Int> OnDirectionChange;
 		

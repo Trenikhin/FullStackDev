@@ -20,8 +20,8 @@ namespace SnakeGame
 
         private void Awake()
         {
-            _winScreen.SetActive(false);
-            _loseScreen.SetActive(false);
+            _winScreen.gameObject.SetActive(false);
+            _loseScreen.gameObject.SetActive(false);
         }
 
         public void SetDifficulty(int current, int max)

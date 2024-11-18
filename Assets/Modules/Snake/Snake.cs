@@ -147,7 +147,7 @@ namespace Modules
             }
 
             Vector3 newPosition = head.position;
-            this.OnMoved?.Invoke(new Vector2Int((int) newPosition.x, (int) newPosition.y));
+                this.OnMoved?.Invoke(new Vector2Int((int) newPosition.x, (int) newPosition.y));
         }
 
         private bool CheckSelfCollided()
