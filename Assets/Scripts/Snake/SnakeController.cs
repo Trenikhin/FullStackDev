@@ -1,7 +1,6 @@
 ﻿namespace Input
 {
 	using System;
-	using Coins;
 	using Modules;
 	using UnityEngine;
 	using Zenject;
@@ -10,52 +9,34 @@
 	{
 		ISnake _snake;
 		IInputHandler _inputHandler;
-		ICoins _coins;
-		IScore _score;
+		ICoinTrigger _coinTrigger;
 		IDifficulty _difficulty;
 		
-		public SnakeController( ISnake snake, IInputHandler inputHandler, ICoins coins, IScore score, IDifficulty difficulty )
+		public SnakeController( ISnake snake, IInputHandler inputHandler, ICoinTrigger coinTrigger, IDifficulty difficulty )
 		{
 			_snake = snake;
 			_inputHandler = inputHandler;
-			_coins = coins;
-			_score = score;
+			_coinTrigger = coinTrigger;
 			_difficulty = difficulty;
 		}
 		
 		public void Initialize()
 		{
 			_inputHandler.OnDirectionChange += OnDirectionChanged;
-			_snake.OnMoved += OnMove;
+			_coinTrigger.OnCoinTouch += OnCoinTouched;
 			_difficulty.OnStateChanged += OnDifficultyChanged;
 		}
 
 		public void Dispose()
 		{
 			_inputHandler.OnDirectionChange -= OnDirectionChanged;
-			_snake.OnMoved -= OnMove;
+			_coinTrigger.OnCoinTouch -= OnCoinTouched;
 			_difficulty.OnStateChanged -= OnDifficultyChanged;
 		}
 
-		void OnDirectionChanged(Vector2Int direction)
-		{
-			_snake.Turn(direction.ToEnum());
-		}
-
-		void OnMove( Vector2Int head )
-		{
-			if (_coins.TryGet(head, out Coin coin))
-			{
-				_snake.Expand( coin.Bones );
-				_score.Add( coin.Score );
-				_coins.Destroy( head );
-			}
-		}
-		
-		void OnDifficultyChanged()
-		{
-			_snake.SetSpeed(_difficulty.Current);
-		}
+		void OnDirectionChanged(Vector2Int direction) => _snake.Turn(direction.ToEnum());
+		void OnCoinTouched( Coin coin ) => _snake.Expand( coin.Bones );
+		void OnDifficultyChanged() => _snake.SetSpeed(_difficulty.Current);
 	}
 	
 	public static class DirectionHelper

@@ -26,6 +26,7 @@
 		{
 			Bind<DifficultyChanger>();
 			Bind<GameOverHandler>();
+			Bind<ScoreCounter>();
 		}
 
 		void InstallObjs()
@@ -33,6 +34,7 @@
 			Bind<SnakeController>();
 			Bind<InputHandler>();
 			BindFromScene<Snake>();
+			Bind<CoinCollector>();
 		}
 
 		ConcreteIdArgConditionCopyNonLazyBinder Bind<T>()
