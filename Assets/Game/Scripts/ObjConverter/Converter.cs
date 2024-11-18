@@ -76,9 +76,7 @@
 				return false;
 			
 			_isRecycling = true;
-			int inProgressAmount = CycleInput;
-			int remainingRaw = RawMaterialsAmount - inProgressAmount;
-			RawMaterialsAmount = remainingRaw;
+			RawMaterialsAmount = RawMaterialsAmount - CycleInput;
 			
 			SetTimeLeft(ConvertTime);
 			
