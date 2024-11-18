@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e257a307b14886b8ac187aa5330e7d, type: 3}
+  m_Name: InputMapConfig
+  m_EditorClassIdentifier: 
+  KeyBindings:
+  - Direction: 1
+    Keys: 1101000077000000
+  - Direction: 2
+    Keys: 1201000073000000
+  - Direction: 3
+    Keys: 6100000014010000
+  - Direction: 4
+    Keys: 6400000013010000

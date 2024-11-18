@@ -1,37 +1,44 @@
 ﻿namespace Snake
 {
 	using System;
+	using System.Collections.Generic;
+	using Data;
 	using Modules;
 	using Zenject;
 	using UnityEngine;
 
 	public interface IInputHandler
 	{
-		event Action<Vector2Int> OnDirectionChange;
+		event Action<SnakeDirection> OnDirectionChange;
 	}
 	
 	public class InputHandler : ITickable, IInputHandler
 	{
-		public event Action<Vector2Int> OnDirectionChange;
+		InputMapConfig _cfg;
+		
+		public InputHandler( InputMapConfig inputMap )
+		{
+			_cfg = inputMap;
+		}
+		
+		public event Action<SnakeDirection> OnDirectionChange;
 		
 		public void Tick()
 		{
-			if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+			foreach (var kb in _cfg.KeyBindings)
 			{
-				OnDirectionChange?.Invoke(Vector2Int.left);
+				if (IsKeyPressed(kb.Keys))
+					OnDirectionChange?.Invoke(kb.Direction);
 			}
-			else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-			{
-				OnDirectionChange?.Invoke(Vector2Int.right);
-			}
-			else if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.LeftArrow))
-			{
-				OnDirectionChange?.Invoke(Vector2Int.up);
-			}
-			else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.RightArrow))
-			{
-				OnDirectionChange?.Invoke(Vector2Int.down);
-			}
+		}
+		
+		bool IsKeyPressed(List<KeyCode> keys)
+		{
+			foreach (var key in keys)
+				if (Input.GetKeyDown(key))
+					return true;
+			
+			return false;
 		}
 	}
 }

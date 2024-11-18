@@ -34,23 +34,8 @@
 			_difficulty.OnStateChanged -= OnDifficultyChanged;
 		}
 
-		void OnDirectionChanged(Vector2Int direction) => _snake.Turn(direction.ToEnum());
+		void OnDirectionChanged(SnakeDirection direction) => _snake.Turn(direction);
 		void OnCoinTouched( Coin coin ) => _snake.Expand( coin.Bones );
 		void OnDifficultyChanged() => _snake.SetSpeed(_difficulty.Current);
-	}
-	
-	public static class DirectionHelper
-	{
-		public static SnakeDirection ToEnum(this Vector2Int vector)
-		{
-			return vector switch
-			{
-				var v when v == Vector2Int.up => SnakeDirection.UP,
-				var v when v == Vector2Int.down => SnakeDirection.DOWN,
-				var v when v == Vector2Int.left => SnakeDirection.LEFT,
-				var v when v == Vector2Int.right => SnakeDirection.RIGHT,
-				_ => SnakeDirection.NONE
-			};
-		}
 	}
 }

@@ -940,6 +940,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prefabsConfig: {fileID: 11400000, guid: 7600a45bafec9b64eabfa4d8bc04443d, type: 2}
+  _inputConfig: {fileID: 11400000, guid: 0e0db6e982236b34b8849555085130b5, type: 2}
 --- !u!114 &1266123931
 MonoBehaviour:
   m_ObjectHideFlags: 0
