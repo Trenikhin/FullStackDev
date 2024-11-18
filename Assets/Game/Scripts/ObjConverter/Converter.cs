@@ -76,7 +76,7 @@
 				return false;
 			
 			_isRecycling = true;
-			RawMaterialsAmount -= RawMaterialsAmount;
+			RawMaterialsAmount -= CycleInput;
 			SetTimeLeft(ConvertTime);
 			
 			return true;
