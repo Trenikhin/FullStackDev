@@ -7,7 +7,7 @@
 
 	public interface IInputHandler
 	{
-		public event Action<Vector2Int> OnDirectionChange;
+		event Action<Vector2Int> OnDirectionChange;
 	}
 	
 	public class InputHandler : ITickable, IInputHandler
