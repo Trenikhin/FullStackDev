@@ -1,4 +1,4 @@
-﻿namespace CoinManager
+﻿namespace Coins
 {
 	using System;
 	using System.Collections.Generic;
@@ -19,15 +19,14 @@
 	
 	public class Coins : ICoins
 	{
-		PrefabsConfig _prefabsConfig;
+		CoinPool _pool;
 		IWorldBounds _worldBounds;
-	
-		HashSet<Vector2Int> _coinsPositions = new ();
+		
 		Dictionary<Vector2Int, Coin> _coins = new ();
 		
-		public Coins( PrefabsConfig prefabConfig, IWorldBounds worldBounds )
+		public Coins(  IWorldBounds worldBounds, CoinPool pool )
 		{
-			_prefabsConfig = prefabConfig;
+			_pool = pool;
 			_worldBounds = worldBounds;
 		}
 		
@@ -47,28 +46,30 @@
 		public void Destroy( Vector2Int pos )
 		{
 			var coin = _coins[pos];
-			
-			_coinsPositions.Remove(pos);
 			_coins.Remove(pos);
-			GameObject.Destroy( coin.gameObject );
+			coin.gameObject.SetActive(false);
+			_pool.Despawn(coin);
 			
 			CountChanged?.Invoke(_coins.Count);
 		}
 		
 		void CreateNewCoin()
 		{
-			var coinPrefab = GameObject.Instantiate(_prefabsConfig.CoinTemplate);
+			var coin = _pool.Spawn();
 
 			Vector2Int rand = _worldBounds.GetRandomPosition();
-			while (_coinsPositions.Contains(rand))
+			while (_coins.ContainsKey(rand))
 				rand = _worldBounds.GetRandomPosition();	
 			
-			coinPrefab.Position = rand;
-			_coinsPositions.Add(rand);
-			_coins.Add(rand, coinPrefab);
-			coinPrefab.Generate();
+			coin.gameObject.SetActive(true);
+			coin.Position = rand;
+			coin.Generate();
+			
+			_coins.Add(rand, coin);
 			
 			CountChanged?.Invoke(_coins.Count);
 		}
+
+		public class CoinPool : MonoMemoryPool<Coin> { }
 	}
 }

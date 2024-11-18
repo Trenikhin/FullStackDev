@@ -1,7 +1,7 @@
 ﻿namespace Core
 {
 	using System;
-	using CoinManager;
+	using Coins;
 	using Modules;
 	using SnakeGame;
 	using UnityEngine;
@@ -27,8 +27,6 @@
 			_bounds = bounds;
 		}
 		
-		public event Action<bool> OnGameOver;
-		
 		public void Initialize()
 		{
 			_snake.OnMoved += OnMoved;
@@ -43,6 +41,8 @@
 			_coins.CountChanged -= OnCoinsCollected;
 
 		}
+		
+		public event Action<bool> OnGameOver;
 
 		void OnMoved( Vector2Int head )
 		{

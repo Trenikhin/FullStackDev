@@ -1,10 +1,9 @@
 ﻿namespace Core
 {
 	using System;
-	using CoinManager;
+	using Coins;
 	using Modules;
 	using SnakeGame;
-	using UnityEngine;
 	using Zenject;
 	
 	public class DifficultyChanger : IInitializable, IDisposable

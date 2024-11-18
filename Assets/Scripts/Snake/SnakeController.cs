@@ -1,7 +1,7 @@
 ﻿namespace Input
 {
 	using System;
-	using CoinManager;
+	using Coins;
 	using Modules;
 	using UnityEngine;
 	using Zenject;
