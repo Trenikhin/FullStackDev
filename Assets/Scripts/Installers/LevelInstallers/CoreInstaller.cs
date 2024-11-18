@@ -1,6 +1,5 @@
 ﻿namespace Installers
 {
-	using Coins;
 	using Core;
 	using Input;
 	using Modules;
@@ -18,11 +17,7 @@
 
 		void InstallCore()
 		{
-			Container
-				.BindInterfacesTo<WorldBounds>()
-				.FromComponentInHierarchy()
-				.AsSingle();
-			
+			BindFromScene<WorldBounds>();
 			Bind<Difficulty>().WithArguments( 9 );
 			Bind<Score>();
 		}
@@ -37,17 +32,21 @@
 		{
 			Bind<SnakeController>();
 			Bind<InputHandler>();
-			
-			Container
-				.BindInterfacesTo<Snake>()
-				.FromComponentInHierarchy()
-				.AsSingle();
+			BindFromScene<Snake>();
 		}
 
 		ConcreteIdArgConditionCopyNonLazyBinder Bind<T>()
 		{
 			return Container
 				.BindInterfacesTo<T>()
+				.AsSingle();
+		}
+
+		void BindFromScene<T>()
+		{
+			Container
+				.BindInterfacesTo<T>()
+				.FromComponentInHierarchy()
 				.AsSingle();
 		}
 	}
