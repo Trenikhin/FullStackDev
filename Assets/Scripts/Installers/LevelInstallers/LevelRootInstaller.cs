@@ -6,7 +6,6 @@
 	{
 		public override void InstallBindings()
 		{
-			ModuleInstaller.Install(Container);
 			CoreInstaller.Install(Container);
 			FactoriesInstaller.Install(Container);
 		}

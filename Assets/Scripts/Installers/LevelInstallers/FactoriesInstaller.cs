@@ -11,6 +11,11 @@
 		
 		public override void InstallBindings()
 		{
+			// Coins Manager
+			Container
+				.BindInterfacesTo<Coins>()
+				.AsSingle();
+			
 			// Coins Pool
 			Container
 				.BindMemoryPool<Coin, Coins.CoinPool>()
