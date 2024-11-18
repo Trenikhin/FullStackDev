@@ -1,7 +1,7 @@
 ﻿namespace Installers
 {
 	using Core;
-	using Input;
+	using Snake;
 	using Modules;
 	using SnakeGame;
 	using Zenject;

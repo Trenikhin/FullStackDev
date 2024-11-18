@@ -1,7 +1,7 @@
 ﻿namespace Core
 {
 	using System;
-	using Input;
+	using Snake;
 	using Modules;
 	using Zenject;
 		

@@ -1,4 +1,4 @@
-﻿namespace Input
+﻿namespace Snake
 {
 	using System;
 	using Coins;
