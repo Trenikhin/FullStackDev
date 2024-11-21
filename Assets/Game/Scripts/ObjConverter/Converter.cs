@@ -81,7 +81,9 @@
 
 		void TryStop()
 		{
-			if (IsOn && !IsRecyclingEnd() && !_isRecycling)
+			if (IsOn &&
+			    !IsRecyclingEnd() &&
+			    !_isRecycling)
 				return;
 			
 			if (IsRecyclingEnd())
