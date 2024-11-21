@@ -2,7 +2,6 @@
 {
 	using System;
 	using Configs;
-	using UnityEngine;
 
 	public class Converter
 	{
@@ -73,6 +72,9 @@
 				
 		public void TickRecycling( float deltaTime ) // deltaTime: time(in sec) since last Tick
 		{
+			if (!_isRecycling)
+				return;
+				
 			if (!TryStop( deltaTime, out var remaining ))
 				SetTimeLeft( remaining );
 		}
@@ -80,25 +82,32 @@
 		bool TryStop( float deltaTime, out float remaining )
 		{
 			remaining = GetRemaining(deltaTime);
-			
-			if (IsOn && !IsRecyclingEnd(remaining) && !_isRecycling ) 
-				return false;
-			
-			if (IsOn && IsRecyclingEnd(remaining))
-			{
-				// Finish Recycling
-				ConvertedMaterialsAmount += CycleOutput;
-			}
-			else
+
+			if ( !IsOn )
 			{
 				// Not Finished yet
 				// When overflowed, out of capacity resources are "burned".
 				RawMaterialsAmount = Math.Min( RawCapacity, RawMaterialsAmount + CycleInput );
+					
+				Stop();
+				return true;
+			}
+			if (IsOn && IsRecyclingEnd(remaining))
+			{
+				// Finish Recycling
+				ConvertedMaterialsAmount += CycleOutput;
+				
+				Stop();
+				return true;
 			}
 
+			return false;
+		}
+
+		void Stop()
+		{
 			SetTimeLeft(0);
 			_isRecycling = false;
-			return true;
 		}
 
 #region TimeLogic

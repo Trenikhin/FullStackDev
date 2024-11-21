@@ -80,8 +80,8 @@ public partial class ConverterTests
         Assert.AreEqual( expectedConvertedAmount, converted.ConvertedMaterialsAmount );   
     }
     
-    [TestCase( 1, 0.5f, 10, 0, 10, 0 )]
-    [TestCase( 1, 0.8f, 10, 0, 10, 0 )]
+    [TestCase( 1, 0.5f, 10, 0, 7, 0 )]
+    [TestCase( 1, 0.8f, 10, 0, 7, 0 )]
     [TestCase( 1, 1.7f, 10, 0, 7, 1 )]
     public void TestConvertCycle( 
         float convertTime,
@@ -97,8 +97,9 @@ public partial class ConverterTests
        
         var converted = new Converter(cfg, startRawAmount, startConvertedAmount, true);
         converted.TryStartRecycle();
-        converted.TickRecycling( deltaTime );
-        
+        converted.TickRecycling( deltaTime / 2 );
+        converted.TickRecycling( deltaTime / 2 );
+       
         Assert.AreEqual( expectedRawAmount, converted.RawMaterialsAmount );
         Assert.AreEqual( expectedConvertedAmount, converted.ConvertedMaterialsAmount );   
     }
