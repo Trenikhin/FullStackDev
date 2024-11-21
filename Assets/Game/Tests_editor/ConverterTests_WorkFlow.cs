@@ -57,7 +57,8 @@ public partial class ConverterTests
 
 
     [TestCase( 1, 0.5f, 10, 0, 10, 0 )]
-    [TestCase( 1, 1.5f, 10, 0, 7, 1 )]
+    [TestCase( 1, 0.8f, 10, 0, 10, 0 )]
+    [TestCase( 1, 1.8f, 10, 0, 10, 0 )]
     public void StopRecycling( 
         float convertTime,
         float deltaTime,
@@ -69,9 +70,10 @@ public partial class ConverterTests
         // Setup
         var cfg = ScriptableObject.CreateInstance<ConvertConfig>();
         cfg.ConvertTime = convertTime;
-        
+       
         var converted = new Converter(cfg, startRawAmount, startConvertedAmount, true);
         converted.TryStartRecycle();
+        converted.Toggle( false );
         converted.TickRecycling( deltaTime );
         
         Assert.AreEqual( expectedRawAmount, converted.RawMaterialsAmount );

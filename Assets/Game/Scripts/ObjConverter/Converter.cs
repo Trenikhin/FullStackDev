@@ -2,6 +2,7 @@
 {
 	using System;
 	using Configs;
+	using UnityEngine;
 
 	public class Converter
 	{
@@ -39,9 +40,6 @@
 		
 		public void Toggle(bool isOn)
 		{
-			if (IsOn == isOn)
-				return;
-			
 			IsOn = isOn;
 		}
 
@@ -75,16 +73,14 @@
 				
 		public void TickRecycling( float deltaTime ) // deltaTime: time(in sec) since last Tick
 		{
-			ReduceTime( deltaTime );
-			TryStop();
+			if (!TryStop())
+				ReduceTime( deltaTime );
 		}
 
-		void TryStop()
+		bool TryStop()
 		{
-			if (IsOn &&
-			    !IsRecyclingEnd() &&
-			    !_isRecycling)
-				return;
+			if (IsOn && !IsRecyclingEnd() && !_isRecycling ) 
+				return false;
 			
 			if (IsRecyclingEnd())
 			{
@@ -100,6 +96,7 @@
 
 			SetTimeLeft(0);
 			_isRecycling = false;
+			return true;
 		}
 
 #region TimeLogic
