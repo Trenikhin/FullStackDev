@@ -73,16 +73,18 @@
 				
 		public void TickRecycling( float deltaTime ) // deltaTime: time(in sec) since last Tick
 		{
-			if (!TryStop( deltaTime ))
-				ReduceTime( deltaTime );
+			if (!TryStop( deltaTime, out var remaining ))
+				SetTimeLeft( remaining );
 		}
 
-		bool TryStop( float deltaTime )
+		bool TryStop( float deltaTime, out float remaining )
 		{
-			if (IsOn && !IsRecyclingEnd( deltaTime ) && !_isRecycling ) 
+			remaining = GetRemaining(deltaTime);
+			
+			if (IsOn && !IsRecyclingEnd(remaining) && !_isRecycling ) 
 				return false;
 			
-			if (IsOn && IsRecyclingEnd(deltaTime))
+			if (IsOn && IsRecyclingEnd(remaining))
 			{
 				// Finish Recycling
 				ConvertedMaterialsAmount += CycleOutput;
@@ -101,8 +103,8 @@
 
 #region TimeLogic
 
-		void ReduceTime(float delta) => SetTimeLeft( _remainingTime - delta );
-		bool IsRecyclingEnd( float delta ) => _remainingTime - delta <= 0;
+		float GetRemaining(float delta) => _remainingTime - delta;
+		bool IsRecyclingEnd( float remaining ) => remaining <= 0;
 		void SetTimeLeft(float sec) => _remainingTime = sec;
 		
 #endregion
