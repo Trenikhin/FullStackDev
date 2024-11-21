@@ -2,6 +2,7 @@ using System;
 using Game.Configs;
 using Game.Obj;
 using NUnit.Framework;
+using UnityEngine;
 
 public class ConverterTests
 {
@@ -12,7 +13,7 @@ public class ConverterTests
     [TestCase(0, 0, true)]
     public void Instantiate( int startRawAmount, int startConvertedAmount, bool isOn )
     {
-        var cfg = GetBaseConfig;
+        var cfg = ScriptableObject.CreateInstance<ConvertConfig>();
         var converted = new Converter(cfg, startRawAmount, startConvertedAmount, isOn);
         
         Assert.IsTrue( converted.IsOn == isOn );
@@ -43,7 +44,7 @@ public class ConverterTests
     [TestCase( 6, 5, 3, 1 )]
     public void InstantiateWithWrongAmount(int startRawAmount, int rawCapacity, int startConvertedAmount, int convertedCapacity)
     {
-        var cfg = GetBaseConfig;
+        var cfg = ScriptableObject.CreateInstance<ConvertConfig>();
         
         cfg.RawMaterialsCapacity = rawCapacity;
         cfg.ConvertedMaterialsCapacity = convertedCapacity;
@@ -61,7 +62,7 @@ public class ConverterTests
     public void AddResources(int pushAmount, int rawCapacity, int expectedExtra)
     {
         // Setup
-        var cfg = GetBaseConfig;
+        var cfg = ScriptableObject.CreateInstance<ConvertConfig>();
         cfg.RawMaterialsCapacity = rawCapacity;
         var converted = new Converter(cfg);
         
@@ -78,7 +79,8 @@ public class ConverterTests
     public void AddResourcesWithWrongAmount(int pushAmount)
     {
         // Setup
-        var converted = new Converter(GetBaseConfig);
+        var cfg = ScriptableObject.CreateInstance<ConvertConfig>();
+        var converted = new Converter(cfg);
         
         Assert.Catch<ArgumentException>(() => converted.AddResources( pushAmount, out _ ));
     }
@@ -88,7 +90,8 @@ public class ConverterTests
     [TestCase( false )]
     public void Toggle(bool isOn)
     {
-        var converted = new Converter(GetBaseConfig);
+        var cfg = ScriptableObject.CreateInstance<ConvertConfig>();
+        var converted = new Converter(cfg);
         converted.Toggle( isOn );
         
         Assert.IsTrue( converted.IsOn == isOn );
@@ -110,7 +113,7 @@ public class ConverterTests
         bool expectedResult)
     {
         // Setup
-        var cfg = GetBaseConfig;
+        var cfg = ScriptableObject.CreateInstance<ConvertConfig>();
         cfg.RawMaterialsCapacity         = rawCapacity;
         cfg.ConvertedMaterialsCapacity   = convertedCapacity;
         cfg.InputAmount                  = cycleInput;
@@ -145,39 +148,15 @@ public class ConverterTests
         int expectedConvertedAmount )
     {
         // Setup
-        var cfg = GetBaseConfig;
+        var cfg = ScriptableObject.CreateInstance<ConvertConfig>();
         cfg.ConvertTime = convertTime;
         
         var converted = new Converter(cfg, startRawAmount, startConvertedAmount, true);
         converted.TryStartRecycle();
         converted.TickRecycling( deltaTime );
-        converted.StopRecycling();
         
         Assert.AreEqual( expectedRawAmount, converted.RawMaterialsAmount );
         Assert.AreEqual( expectedConvertedAmount, converted.ConvertedMaterialsAmount );   
     }
-    
-    [Test]
-    public void TryStopWhileNotRunning()
-    {
-        // Setup
-        var cfg = GetBaseConfig;
-        
-        var converted = new Converter(cfg, 10, 0, true);
-        
-        Assert.Catch<Exception>(() =>  converted.StopRecycling() );
-    }
-#endregion
-#region Usages
-
-    ConvertConfig GetBaseConfig => new ConvertConfig()
-    {
-        RawMaterialsCapacity = 12,
-        ConvertedMaterialsCapacity = 12,
-        InputAmount = 3,
-        OutputAmount = 1,
-        ConvertTime = 1,
-    };
-    
 #endregion
 }

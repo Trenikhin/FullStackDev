@@ -5,6 +5,7 @@
 
 	public class Converter
 	{
+		ConvertConfig _config;
 		bool _isRecycling;
 		float _remainingTime;
 		
@@ -21,30 +22,20 @@
 			if ( convertedAmount < 0 )
 				throw new ArgumentException( "The input amount is negative.", nameof(convertedAmount) );
 			
-			ConvertedCapacity = config.ConvertedMaterialsCapacity;
-			RawCapacity = config.RawMaterialsCapacity;
-			CycleInput = config.InputAmount;
-			CycleOutput = config.OutputAmount;
+			_config = config;
 			RawMaterialsAmount = rawAmount;
-			RawCapacity = config.RawMaterialsCapacity;
 			ConvertedMaterialsAmount = convertedAmount;
-			ConvertedCapacity = config.ConvertedMaterialsCapacity;
-			ConvertTime = config.ConvertTime;
 			IsOn = isOn;
-
-			// for enter from save: not implemented yet
-			_isRecycling = false;
-			_remainingTime = 0;
 		}
 		
 		public bool IsOn {get; private set;}
 		public int RawMaterialsAmount {get; private set;}
 		public int ConvertedMaterialsAmount	{get; private set;}
-		public int RawCapacity {get;}
-		public int ConvertedCapacity {get;}
-		public int CycleInput {get;}
-		public int CycleOutput {get;}
-		public float ConvertTime {get;}
+		public int RawCapacity => _config.RawMaterialsCapacity;
+		public int ConvertedCapacity => _config.ConvertedMaterialsCapacity;
+		public int CycleInput => _config.InputAmount;
+		public int CycleOutput => _config.OutputAmount;
+		public float ConvertTime => _config.ConvertTime;
 		
 		public void Toggle(bool isOn)
 		{
@@ -85,12 +76,13 @@
 		public void TickRecycling( float deltaTime ) // deltaTime: time(in sec) since last Tick
 		{
 			ReduceTime( deltaTime );
+			TryStop();
 		}
-		
-		public void StopRecycling()
+
+		void TryStop()
 		{
-			if (!_isRecycling)
-				throw new Exception("Can't stop recycling if not running");
+			if (IsOn && !IsRecyclingEnd() && !_isRecycling)
+				return;
 			
 			if (IsRecyclingEnd())
 			{
