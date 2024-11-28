@@ -2,64 +2,48 @@
 {
 	using System;
 	using Modules.Planets;
-	using Obj;
 	using UniRx;
-	using UnityEngine;
 	using Zenject;
 	
-	public class UiPlanetPopupPresenter : IInitializable, IDisposable
+	public interface IPlanetPopupHandler : IPopupHandler
+	{
+		void OnShow(IPlanet planet);
+	}
+
+	public class UiPlanetPopupPresenter : IPlanetPopupHandler
 	{
 		[Inject] IUiPlanetPopupView _view;
-		[Inject] PlanetPopupModel _model;
-		[Inject] IPlanetPopup _planetPopup; 
-		
+		[Inject] IUiNavigator _navigator;
+ 		
 		IPlanet _planet;
 		
-		CompositeDisposable _disposables = new ();
+		CompositeDisposable _showDisposables = new ();
 		
-		public void Initialize()
+		public void OnShow( IPlanet planet )
 		{
-			// Show / Hide
-			_model.IsShowing
-				.Skip(1)
-				.Subscribe(s =>
-				{
-					if (s)
-						OnShow(_model.Planet);
-					else
-						OnHide();
-				} )
-				.AddTo(_disposables);
+			_planet = planet;
+			
+			_view.ShowHide( true );
+			UpdateView(_planet);
+			
+			// OnPlanet Upgraded
+			_planet.OnUpgraded += OnUpgraded;
 			
 			// On Close Click
 			_view.OnCloseClicked
-				.Subscribe(_ => _planetPopup.Hide() )
-				.AddTo(_disposables);
+				.Subscribe(_ => _navigator.Hide() )
+				.AddTo(_showDisposables);
 			
 			// On Upgrade Click
 			_view.OnUpgradeClicked
 				.Where( _ => _planet.CanUpgrade )
 				.Subscribe( _ =>  _planet.Upgrade() )
-				.AddTo( _disposables );
-			
-			// Update view
-			_model.IsShowing
-				.Where( s => s )
-				.Subscribe( _ => UpdateView( _planet ) )
-				.AddTo(_disposables);
+				.AddTo( _showDisposables );
 		}
 
-		public void Dispose() => _disposables?.Dispose();
-
-		void OnShow( IPlanet planet )
+		public void OnHide()
 		{
-			_planet = planet;
-			_planet.OnUpgraded += OnUpgraded;
-			_view.ShowHide( true );
-		}
-
-		void OnHide()
-		{
+			_showDisposables.Dispose();
 			_planet.OnUpgraded -= OnUpgraded;
 			_planet = null;
 			_view.ShowHide( false );

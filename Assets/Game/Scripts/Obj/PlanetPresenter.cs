@@ -14,7 +14,6 @@
 		
 		public void Initialize()
 		{
-			_view.ActivateCoin( false );
 			_view.SetState( EPlanetViewState.Locked );
 			_view.SetIcon( _planet.GetIcon( false ) );
 			_view.SetPrice( _planet.Price.ToString() );
@@ -54,7 +53,6 @@
 
 		void OnReady()
 		{
-			_view.ActivateCoin( true );
 			_view.SetState( EPlanetViewState.Ready );
 			_view.SetIcon( _planet.GetIcon( true ) );
 		}

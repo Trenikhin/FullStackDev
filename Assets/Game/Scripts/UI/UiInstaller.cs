@@ -7,11 +7,7 @@
 		public override void InstallBindings()
 		{
 			Container
-				.BindInterfacesTo<PlanetPopup>()
-				.AsSingle();
-			
-			Container
-				.Bind<PlanetPopupModel>()
+				.BindInterfacesTo<UiNavigator>()
 				.AsSingle();
 			
 			Container

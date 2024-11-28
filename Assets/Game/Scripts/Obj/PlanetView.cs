@@ -15,10 +15,9 @@
 
 	public interface IPlanetView
 	{
-		Transform Coin { get; }
+		Vector3 Coin { get; }
 		
 		void SetState(EPlanetViewState state);
-		void ActivateCoin(bool isActive);
 		void SetProgress(float progress, string label);
 		void SetIcon(Sprite icon);
 		void SetPrice(string price);
@@ -37,19 +36,14 @@
 		[SerializeField] Image _progressBar;
 		[SerializeField] TextMeshProUGUI _progressText;
 
-		public Transform Coin => _coinParent.transform;
+		public Vector3 Coin => _coinParent.transform.position;
 
 		public void SetState( EPlanetViewState state )
 		{
 			_lockParent				.SetActive( state == EPlanetViewState.Locked );
 			_priceParent			.SetActive( state == EPlanetViewState.Locked );
 			_progressBarParent		.SetActive( state == EPlanetViewState.InProgress );
-		}
-
-
-		public void ActivateCoin( bool isActive )
-		{
-			_coinParent.SetActive( isActive );
+			_coinParent				.SetActive( state == EPlanetViewState.Ready );
 		}
 		
 				

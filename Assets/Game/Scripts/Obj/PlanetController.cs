@@ -10,7 +10,7 @@
 	public class PlanetController : IInitializable, IDisposable
 	{
 		[Inject] SmartButton _button;
-		[Inject] IPlanetPopup _planetPopup;
+		[Inject] IUiNavigator _uiNavigator;
 		[Inject] IPlanet _planet;
 		
 		CompositeDisposable _disposables = new ();
@@ -47,7 +47,7 @@
 
 		void OnHold()
 		{
-			_planetPopup.Show( _planet );
+			_uiNavigator.Show( _planet );
 		}
 	}
 }
