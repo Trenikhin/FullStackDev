@@ -51,19 +51,6 @@
 
 		public void Dispose() => _disposables?.Dispose();
 
-		void UpdateView(IPlanet planet)
-		{
-			_view.SetIcon( planet.GetIcon( true) );
-			_view.SetName( $"{planet.Name}");
-			_view.SetPopulation( $"Population: {planet.Population}" );
-			_view.SetLevel( $"Level: {planet.Level}/{planet.MaxLevel}" );
-			_view.SetIncome( $"Income: {planet.MinuteIncome}" );
-			_view.SetUpgradePrice( $"{planet.Price}" );
-			_view.SetInteractable( _planet.CanUpgrade );
-		}
-
-		void OnUpgraded( int _ ) => UpdateView(_planet);
-		
 		void OnShow( IPlanet planet )
 		{
 			_planet = planet;
@@ -77,5 +64,18 @@
 			_planet = null;
 			_view.ShowHide( false );
 		}
+		
+		void UpdateView(IPlanet planet)
+		{
+			_view.SetIcon( planet.GetIcon( true) );
+			_view.SetName( $"{planet.Name}");
+			_view.SetPopulation( $"Population: {planet.Population}" );
+			_view.SetLevel( $"Level: {planet.Level}/{planet.MaxLevel}" );
+			_view.SetIncome( $"Income: {planet.MinuteIncome}" );
+			_view.SetUpgradePrice( $"{planet.Price}" );
+			_view.SetInteractable( _planet.CanUpgrade );
+		}
+
+		void OnUpgraded( int _ ) => UpdateView(_planet);
 	}
 }
