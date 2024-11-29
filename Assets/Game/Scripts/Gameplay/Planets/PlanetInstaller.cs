@@ -12,10 +12,7 @@ namespace Game.Gameplay
 
         public override void InstallBindings()
         {
-            this.Container
-                .BindInterfacesAndSelfTo<PlanetFacade>()
-                .FromComponentsInHierarchy()
-                .AsSingle();
+            
         }
     }
 }

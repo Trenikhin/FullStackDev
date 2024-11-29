@@ -15,6 +15,7 @@
 		
 		// Services
 		[Inject] ITimeHelper _timeHelper;
+		[Inject] IFlyIcons _flyIcons;
 		
 		public void Initialize()
 		{
@@ -25,6 +26,7 @@
 			_planet.OnUnlocked += OnProgress;
 			_planet.OnIncomeReady += HandleIncomeReady;
 			_planet.OnIncomeTimeChanged += UpdateProgressTick;
+			_planet.OnGathered += OnGathered;
 		}
 
 		public void Dispose()
@@ -32,6 +34,7 @@
 			_planet.OnUnlocked -= OnProgress;
 			_planet.OnIncomeReady -= HandleIncomeReady;
 			_planet.OnIncomeTimeChanged -= UpdateProgressTick;
+			_planet.OnGathered -= OnGathered;
 		}
 
 		void HandleIncomeReady(bool isReady)
@@ -46,6 +49,11 @@
 		{
 			_view.SetState( EPlanetViewState.InProgress );
 			_view.SetIcon( _planet.GetIcon( true ) );
+		}
+		
+		void OnGathered(int delta)
+		{
+			_flyIcons.Fly(_view.Coin, delta );
 		}
 
 		void UpdateProgressTick( float progress )
