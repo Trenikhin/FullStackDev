@@ -3,18 +3,15 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using DG.Tweening;
 	using Modules.Money;
-	using Modules.Planets;
 	using Obj;
 	using Sirenix.Utilities;
 	using UniRx;
-	using UnityEngine;
 	using Zenject;
 
 	public interface ICoins
 	{
-		IReadOnlyReactiveProperty<int> Value { get; }
+		IReadOnlyReactiveProperty<int> Showing { get; } // Coins to show != current player coins
 		
 		void Hide(int coins);
 	}
@@ -30,11 +27,11 @@
 
 		List<Action<int>> _gatheredHandlers = new ();
 		
-		public IReadOnlyReactiveProperty<int> Value { get; private set; }
+		public IReadOnlyReactiveProperty<int> Showing { get; private set; }
 		
 		public void Initialize()
 		{
-			Value = Observable
+			Showing = Observable
 				.CombineLatest( _show, _hidden, (c, h) => c - h )
 				.ToReadOnlyReactiveProperty();
 			

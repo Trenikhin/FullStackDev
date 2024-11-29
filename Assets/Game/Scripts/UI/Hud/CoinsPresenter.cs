@@ -16,7 +16,7 @@
 		
 		public void Initialize()
 		{
-			_coins.Value
+			_coins.Showing
 				.Subscribe( v => _coinsView.Text = v.ToString() )
 				.AddTo(_disposables);
 		}
