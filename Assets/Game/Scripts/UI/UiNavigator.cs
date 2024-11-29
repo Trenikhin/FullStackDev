@@ -8,8 +8,8 @@
 	{
 		None = 0,
 		
-		Screen = 0,
-		Popup = 1,
+		Screen = 1,
+		Popup = 2,
 	}
 	
 	public interface IUi
