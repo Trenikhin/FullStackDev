@@ -8,8 +8,6 @@
 	[Serializable]
 	public class PlanetUi : IUi
 	{
-		public EUi Ui => EUi.Popup;
-		
 		public IPlanet Planet { get; }
 		
 		public PlanetUi(IPlanet planet)

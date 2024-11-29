@@ -3,19 +3,8 @@
 	using System;
 	using System.Collections.Generic;
 	using UniRx;
-
-	public enum EUi
-	{
-		None = 0,
-		
-		Screen = 1,
-		Popup = 2,
-	}
 	
-	public interface IUi
-	{
-		EUi Ui { get; }
-	}
+	public interface IUi {}
 	
 	public interface IUiNavigator
 	{

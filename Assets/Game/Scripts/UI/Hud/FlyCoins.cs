@@ -10,7 +10,7 @@
 		void Fly(Vector3 from, int delta);
 	}
 	
-	public class FlyIcons : MonoBehaviour, IFlyIcons
+	public class FlyCoins : MonoBehaviour, IFlyIcons
 	{
 		[SerializeField] Transform _coinTarget;
 		[SerializeField] GameObject _coinTemplate;

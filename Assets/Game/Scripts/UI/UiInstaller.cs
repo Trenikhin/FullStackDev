@@ -21,7 +21,7 @@
 				.AsSingle();
 			
 			Container
-				.BindInterfacesTo<FlyIcons>()
+				.BindInterfacesTo<FlyCoins>()
 				.FromComponentInHierarchy()
 				.AsSingle();
 			

@@ -1,8 +1,6 @@
 ﻿namespace Game.UI
 {
 	using System;
-	using Modules.Planets;
-	using Sirenix.Utilities;
 	using UniRx;
 	using Zenject;
 
@@ -10,7 +8,6 @@
 	{
 		[Inject] ICoins _coins;
 		[Inject] ICoinsView _coinsView;
-		[Inject] Planet[] _planets;
 		
 		CompositeDisposable _disposables = new ();
 		
