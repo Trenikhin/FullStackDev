@@ -9,7 +9,7 @@
 	public interface IUiNavigator
 	{
 		IObservable<T> OnOpen<T>();
-		IObservable<T> OnClose<T>();
+		IObservable<T> OnHide<T>();
 		
 		void Show<T>( T ui ) where T : IUi;
 		void Hide<T>() where T : IUi;
@@ -27,7 +27,7 @@
 			return _onOpen.Select (c => (T)_open[c] );
 		}
 
-		public IObservable<T> OnClose<T>()
+		public IObservable<T> OnHide<T>()
 		{
 			return _onClose.Select ( c => (T)_open[c] );
 		}

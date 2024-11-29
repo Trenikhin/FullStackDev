@@ -36,7 +36,7 @@
 			
 			// Close
 			_navigator
-				.OnClose<PlanetUi>()
+				.OnHide<PlanetUi>()
 				.Subscribe(m => OnHide())
 				.AddTo(_lifetimeDisposables);
 		}
