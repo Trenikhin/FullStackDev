@@ -1,35 +1,61 @@
 ﻿namespace Game.UI
 {
-	using Modules.Planets;
-	using Zenject;
+	using System;
+	using System.Collections.Generic;
+	using UniRx;
 
-	public interface IUiNavigator
+	public enum EUi
 	{
-		void Show(IPlanet planet);
-		void Hide();
+		None = 0,
+		
+		Screen = 0,
+		Popup = 1,
 	}
 	
-	public interface IPopupHandler
+	public interface IUi
 	{
-		void OnHide();
+		EUi Ui { get; }
+	}
+	
+	public interface IUiNavigator
+	{
+		IObservable<T> OnOpen<T>();
+		IObservable<T> OnClose<T>();
+		
+		void Show<T>( T ui ) where T : IUi;
+		void Hide<T>() where T : IUi;
 	}
 	
 	public class UiNavigator : IUiNavigator
 	{
-		[Inject] IPlanetPopupHandler _planetPopupHandler;
+		Dictionary<Type, object> _open = new ();
 		
-		IPopupHandler _popupHandler;
+		ReactiveCommand<Type> _onOpen = new();
+		ReactiveCommand<Type> _onClose = new();
 		
-		public void Show( IPlanet planet )
+		public IObservable<T> OnOpen<T>() 
 		{
-			_popupHandler = _planetPopupHandler;
-			_planetPopupHandler.OnShow( planet );
+			return _onOpen.Select (c => (T)_open[c] );
 		}
-		
-		public void Hide()
+
+		public IObservable<T> OnClose<T>()
 		{
-			_popupHandler.OnHide();
-			_popupHandler = null;
+			return _onClose.Select ( c => (T)_open[c] );
+		}
+
+		public void Show<T>(T ui) where T : IUi
+		{
+			_open.Add( ui.GetType(), ui );
+			_onOpen.Execute(ui.GetType());
+		}
+
+		public void Hide<T>() where T : IUi
+		{
+			if (!_open.ContainsKey(typeof(T)))
+				return;
+
+			_onClose.Execute(typeof(T));
+			_open.Remove( typeof(T) );
 		}
 	}
 }

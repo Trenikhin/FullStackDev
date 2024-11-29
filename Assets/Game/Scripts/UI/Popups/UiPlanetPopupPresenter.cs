@@ -5,21 +5,47 @@
 	using UniRx;
 	using Zenject;
 	
-	public interface IPlanetPopupHandler : IPopupHandler
+	[Serializable]
+	public class PlanetUi : IUi
 	{
-		void OnShow(IPlanet planet);
+		public EUi Ui => EUi.Popup;
+		
+		public IPlanet Planet { get; }
+		
+		public PlanetUi(IPlanet planet)
+		{
+			Planet = planet;
+		}
 	}
 
-	public class UiPlanetPopupPresenter : IPlanetPopupHandler
+	public class UiPlanetPopupPresenter : IInitializable, IDisposable
 	{
 		[Inject] IUiPlanetPopupView _view;
 		[Inject] IUiNavigator _navigator;
- 		
+		
 		IPlanet _planet;
 		
+		CompositeDisposable _lifetimeDisposables = new ();
 		CompositeDisposable _showDisposables = new ();
 		
-		public void OnShow( IPlanet planet )
+		public void Initialize()
+		{
+			// Open
+			_navigator
+				.OnOpen<PlanetUi>()
+				.Subscribe(m => OnShow( m.Planet ))
+				.AddTo(_lifetimeDisposables);
+			
+			// Close
+			_navigator
+				.OnClose<PlanetUi>()
+				.Subscribe(m => OnHide())
+				.AddTo(_lifetimeDisposables);
+		}
+		
+		public void Dispose() => _lifetimeDisposables?.Dispose();
+		
+		void OnShow( IPlanet planet )
 		{
 			_planet = planet;
 			_showDisposables = new CompositeDisposable();
@@ -32,7 +58,7 @@
 			
 			// On Close Click
 			_view.OnCloseClicked
-				.Subscribe(_ => _navigator.Hide() )
+				.Subscribe(_ => _navigator.Hide<PlanetUi>() )
 				.AddTo(_showDisposables);
 			
 			// On Upgrade Click
@@ -41,8 +67,8 @@
 				.Subscribe( _ =>  _planet.Upgrade() )
 				.AddTo( _showDisposables );
 		}
-
-		public void OnHide()
+		
+		void OnHide()
 		{
 			_showDisposables.Dispose();
 			_planet.OnUpgraded -= OnUpgraded;

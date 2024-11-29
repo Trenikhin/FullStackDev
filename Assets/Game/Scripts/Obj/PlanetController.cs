@@ -47,7 +47,12 @@
 
 		void OnHold()
 		{
-			_uiNavigator.Show( _planet );
+			_uiNavigator.Show( new PlanetUi(_planet) );
 		}
+	}
+	
+	public class TryUnlockMassage
+	{
+		public bool Some;
 	}
 }
