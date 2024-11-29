@@ -2,14 +2,19 @@
 {
 	using System;
 	using Modules.Planets;
+	using Services;
 	using UI;
 	using UnityEngine;
 	using Zenject;
 
 	public class PlanetPresenter : IInitializable, IDisposable
 	{
+		// Obj
 		[Inject] IPlanet _planet;
 		[Inject] IPlanetView _view;
+		
+		// Services
+		[Inject] ITimeHelper _timeHelper;
 		
 		public void Initialize()
 		{
@@ -45,21 +50,15 @@
 
 		void UpdateProgressTick( float progress )
 		{
-			_view.SetProgress( _planet.IncomeProgress, FormatTime(progress) );
+			var time = _timeHelper.SecondsToTxt(progress);
+			
+			_view.SetProgress( _planet.IncomeProgress, time );
 		}
 
 		void OnReady()
 		{
 			_view.SetState( EPlanetViewState.Ready );
 			_view.SetIcon( _planet.GetIcon( true ) );
-		}
-		
-		string FormatTime(float seconds)
-		{
-			int minutes = Mathf.FloorToInt(seconds / 60);
-			int remainingSeconds = Mathf.FloorToInt(seconds % 60);
-        
-			return $"{minutes:D1}m:{remainingSeconds:D2}s";
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿namespace Game.UI
 {
+	using Services;
 	using Zenject;
 
 	public class UiInstaller : MonoInstaller
@@ -22,6 +23,10 @@
 			Container
 				.BindInterfacesTo<FlyIcons>()
 				.FromComponentInHierarchy()
+				.AsSingle();
+			
+			Container
+				.BindInterfacesTo<TimeHelper>()
 				.AsSingle();
 		}
 	}
