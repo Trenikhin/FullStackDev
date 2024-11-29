@@ -29,6 +29,7 @@
 		public void Hide()
 		{
 			_popupHandler.OnHide();
+			_popupHandler = null;
 		}
 	}
 }

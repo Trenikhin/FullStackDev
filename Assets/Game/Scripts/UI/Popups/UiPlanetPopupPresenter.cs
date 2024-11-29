@@ -22,6 +22,7 @@
 		public void OnShow( IPlanet planet )
 		{
 			_planet = planet;
+			_showDisposables = new CompositeDisposable();
 			
 			_view.ShowHide( true );
 			UpdateView(_planet);
