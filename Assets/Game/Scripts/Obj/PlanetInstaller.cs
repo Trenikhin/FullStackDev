@@ -19,7 +19,7 @@
 				.AsSingle();
 			
 			Container
-				.BindInterfacesTo<Planet>()
+				.BindInterfacesTo<PlanetPresenter>()
 				.AsSingle();
 			
 			Container
@@ -27,16 +27,17 @@
 				.AsSingle();
 			
 			Container
-				.BindInterfacesTo<PlanetPresenter>()
+				.Bind<SmartButton>()
+				.FromComponentInHierarchy()
 				.AsSingle();
+			
 			Container
 				.BindInterfacesTo<PlanetView>()
 				.FromComponentInHierarchy()
 				.AsSingle();
 			
 			Container
-				.Bind<SmartButton>()
-				.FromComponentInHierarchy()
+				.BindInterfacesTo<Planet>()
 				.AsSingle();
 		}
 	}

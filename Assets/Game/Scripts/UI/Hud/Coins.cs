@@ -27,8 +27,6 @@
 
 		List<Action<int>> _gatheredHandlers = new ();
 		
-		public IReadOnlyReactiveProperty<int> Showing { get; private set; }
-		
 		public void Initialize()
 		{
 			Showing = Observable
@@ -59,9 +57,14 @@
 			
 			_storage.OnMoneySpent -= OnChanged;
 		}
+
+#region ICoins
+		
+		public IReadOnlyReactiveProperty<int> Showing { get; private set; }
 		
 		public void Hide( int coins ) => _hidden.Value = coins;
-
+		
+#endregion 		
 		
 		void OnGathered(int delta, IPlanetFacade planet)
 		{
