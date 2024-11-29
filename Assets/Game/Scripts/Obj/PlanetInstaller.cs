@@ -15,6 +15,10 @@
 			Container.BindInstance(_config);
 			
 			Container
+				.BindInterfacesTo<PlanetFacade>()
+				.AsSingle();
+			
+			Container
 				.BindInterfacesTo<Planet>()
 				.AsSingle();
 			

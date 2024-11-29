@@ -8,7 +8,7 @@
 
 	public class CoinsPresenter : IInitializable, IDisposable
 	{
-		[Inject] IShowCoins _showCoins;
+		[Inject] ICoins _coins;
 		[Inject] ICoinsView _coinsView;
 		[Inject] Planet[] _planets;
 		
@@ -16,7 +16,7 @@
 		
 		public void Initialize()
 		{
-			_showCoins.Current
+			_coins.Value
 				.Subscribe( v => _coinsView.Text = v.ToString() )
 				.AddTo(_disposables);
 		}

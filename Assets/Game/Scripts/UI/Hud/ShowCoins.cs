@@ -1,40 +1,79 @@
 ﻿namespace Game.UI
 {
 	using System;
+	using System.Collections.Generic;
+	using System.Linq;
 	using DG.Tweening;
 	using Modules.Money;
+	using Modules.Planets;
+	using Obj;
+	using Sirenix.Utilities;
 	using UniRx;
+	using UnityEngine;
 	using Zenject;
 
-	public interface IShowCoins
+	public interface ICoins
 	{
-		IReadOnlyReactiveProperty<int> Current { get; }
-
-		void Set(int coins);
+		IReadOnlyReactiveProperty<int> Value { get; }
+		
+		void Hide(int coins);
 	}
 	
-	public class ShowCoins : IShowCoins , IInitializable, IDisposable
+	public class Coins : ICoins , IInitializable, IDisposable
 	{
-		ReactiveProperty<int> _show = new (0);
-
+		[Inject] IFlyIcons _flyIcons;
 		[Inject] IMoneyStorage _storage;
+		[Inject] List<IPlanetFacade> _planets;
+		
+		ReactiveProperty<int> _show = new (0);
+		ReactiveProperty<int> _hidden = new (0);
+
+		List<Action<int>> _gatheredHandlers = new ();
+		
+		public IReadOnlyReactiveProperty<int> Value { get; private set; }
 		
 		public void Initialize()
 		{
+			Value = Observable
+				.CombineLatest( _show, _hidden, (c, h) => c - h )
+				.ToReadOnlyReactiveProperty();
+			
 			_show.Value = _storage.Money;
-		
-			_storage.OnMoneySpent += Spend;
+			_storage.OnMoneyChanged += OnChanged;
+			
+			// TODO: Workaround
+			_planets
+				.Select( p => p )
+				.ForEach(p =>
+				{
+					Action<int> handler = v => OnGathered(v, p);
+					p.Planet.OnGathered += handler;
+					_gatheredHandlers.Add(handler);
+				});
 		}
 
 		public void Dispose()
 		{
-			_storage.OnMoneySpent -= Spend;
+			_planets
+				.Select(p => p)
+				.Where( (_, i) => i < _gatheredHandlers.Count )
+				.ForEach((p, index) => p.Planet.OnGathered -= _gatheredHandlers[index] );
+			_gatheredHandlers.Clear();
+			
+			_storage.OnMoneySpent -= OnChanged;
 		}
 		
-		public IReadOnlyReactiveProperty<int> Current	=> _show;
+		public void Hide( int coins ) => _hidden.Value = coins;
 
-		public void Set( int coins ) => _show.Value = coins;
+		
+		void OnGathered(int delta, IPlanetFacade planet)
+		{
+			_flyIcons.Fly(planet.View.Coin, delta);
+		}
 
-		void Spend(int newValue, int oldValue) => _show.Value = newValue;
+		void OnChanged(int newValue, int oldValue)
+		{
+			_show.Value = newValue;
+		}
 	}
 }

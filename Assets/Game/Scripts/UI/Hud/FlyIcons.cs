@@ -16,12 +16,14 @@
 		[SerializeField] GameObject _coinTemplate;
 		[SerializeField] float _duration = 0.5f;
 		
-		[Inject] IShowCoins _showCoins;
+		[Inject] ICoins _coins;
 		
 		public void Fly( Vector3 from, int delta ) => StartCoroutine(FlyRoutine(from, delta));
 
 		IEnumerator FlyRoutine( Vector3 from, int delta )
 		{
+			_coins.Hide(delta);
+			
 			// Fly
 			var coin = Instantiate( _coinTemplate, _coinTarget );
 			coin.transform.position = from;
@@ -34,11 +36,8 @@
 			Destroy(coin.gameObject);
 			
 			// Change Coins
-			var cur = _showCoins.Current.Value;
-			var tgt = cur + delta;
-			
 			DOVirtual
-				.Float(cur, tgt, 0.4f, v => _showCoins.Set((int)v ))
+				.Float(delta, 0, 0.4f, v => _coins.Hide((int)v ))
 				.SetEase(Ease.Linear);
 		}
 	}

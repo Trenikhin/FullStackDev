@@ -1,8 +1,10 @@
 ﻿using Modules.Planets;
 using Zenject;
+using Game.Obj;
 
 namespace Game.Gameplay
 {
+
     public sealed class PlanetInstaller : Installer<PlanetCatalog, PlanetInstaller>
     {
         [Inject]
@@ -10,14 +12,10 @@ namespace Game.Gameplay
 
         public override void InstallBindings()
         {
-            foreach (PlanetConfig config in _catalog)
-            {
-                this.Container
-                    .BindInterfacesAndSelfTo<Planet>()
-                    .AsCached()
-                    .WithArguments(config)
-                    .NonLazy();
-            }
+            this.Container
+                .BindInterfacesAndSelfTo<PlanetFacade>()
+                .FromComponentsInHierarchy()
+                .AsSingle();
         }
     }
 }

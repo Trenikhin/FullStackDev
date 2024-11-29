@@ -10,7 +10,6 @@
 	{
 		[Inject] IPlanet _planet;
 		[Inject] IPlanetView _view;
-		[Inject] IFlyIcons _flyIcons;
 		
 		public void Initialize()
 		{
@@ -21,7 +20,6 @@
 			_planet.OnUnlocked += OnProgress;
 			_planet.OnIncomeReady += HandleIncomeReady;
 			_planet.OnIncomeTimeChanged += UpdateProgressTick;
-			_planet.OnGathered += OnCoinCollected;
 		}
 
 		public void Dispose()
@@ -29,7 +27,6 @@
 			_planet.OnUnlocked -= OnProgress;
 			_planet.OnIncomeReady -= HandleIncomeReady;
 			_planet.OnIncomeTimeChanged -= UpdateProgressTick;
-			_planet.OnGathered -= OnCoinCollected;
 		}
 
 		void HandleIncomeReady(bool isReady)
@@ -55,11 +52,6 @@
 		{
 			_view.SetState( EPlanetViewState.Ready );
 			_view.SetIcon( _planet.GetIcon( true ) );
-		}
-		
-		void OnCoinCollected(int delta)
-		{
-			_flyIcons.Fly(_view.Coin, delta);
 		}
 		
 		string FormatTime(float seconds)
