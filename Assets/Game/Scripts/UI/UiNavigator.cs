@@ -1,9 +1,9 @@
 ﻿namespace Game.UI
 {
 	using System;
-	using System.Collections.Generic;
 	using UniRx;
-	
+	using Zenject;
+
 	public interface IUi {}
 	
 	public interface IUiNavigator
@@ -15,35 +15,44 @@
 		void Hide<T>() where T : IUi;
 	}
 	
-	public class UiNavigator : IUiNavigator
+	public class UiNavigator : IUiNavigator, IInitializable
 	{
-		Dictionary<Type, object> _open = new ();
+		ReactiveDictionary<Type, object> _open = new ();
 		
-		ReactiveCommand<Type> _onOpen = new();
-		ReactiveCommand<Type> _onClose = new();
+		public void Initialize()
+		{
+			Show( new CoinsUi() );
+		}
 		
 		public IObservable<T> OnOpen<T>() 
 		{
-			return _onOpen.Select (c => (T)_open[c] );
+			return _open
+				.ObserveAdd()
+				.Where( c => c.Key == typeof(T) )
+				.Select (c => (T)_open[c.Key] );
 		}
 
 		public IObservable<T> OnHide<T>()
 		{
-			return _onClose.Select ( c => (T)_open[c] );
+			return _open
+				.ObserveRemove()
+				.Where( c => c.Key == typeof(T) )
+				.Select (c => (T)c.Value );
 		}
 
 		public void Show<T>(T ui) where T : IUi
 		{
+			if (_open.ContainsKey(typeof(T)))
+				return;
+			
 			_open.Add( ui.GetType(), ui );
-			_onOpen.Execute(ui.GetType());
 		}
 
 		public void Hide<T>() where T : IUi
 		{
 			if (!_open.ContainsKey(typeof(T)))
 				return;
-
-			_onClose.Execute(typeof(T));
+			
 			_open.Remove( typeof(T) );
 		}
 	}
