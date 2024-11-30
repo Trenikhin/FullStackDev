@@ -50,9 +50,4 @@
 			_uiNavigator.Show( new PlanetUi(_planet) );
 		}
 	}
-	
-	public class TryUnlockMassage
-	{
-		public bool Some;
-	}
 }
