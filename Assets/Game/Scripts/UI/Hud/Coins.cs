@@ -43,7 +43,7 @@
 			_hidden.Value = coins;
 		}
 
-		#endregion 		
+#endregion 		
 
 		void OnChanged(int newValue, int oldValue)
 		{

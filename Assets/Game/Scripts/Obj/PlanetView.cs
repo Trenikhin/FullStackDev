@@ -40,10 +40,10 @@
 
 		public void SetState( EPlanetViewState state )
 		{
-			_lockParent				.SetActive( state == EPlanetViewState.Locked );
-			_priceParent			.SetActive( state == EPlanetViewState.Locked );
-			_progressBarParent		.SetActive( state == EPlanetViewState.InProgress );
-			_coinParent				.SetActive( state == EPlanetViewState.Ready );
+			_lockParent.SetActive( state == EPlanetViewState.Locked );
+			_priceParent.SetActive( state == EPlanetViewState.Locked );
+			_progressBarParent.SetActive( state == EPlanetViewState.InProgress );
+			_coinParent.SetActive( state == EPlanetViewState.Ready );
 		}
 		
 				
