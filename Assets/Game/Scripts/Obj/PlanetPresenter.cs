@@ -2,6 +2,7 @@
 {
 	using System;
 	using Modules.Planets;
+	using Modules.UI;
 	using Services;
 	using UI;
 	using UnityEngine;
@@ -16,13 +17,19 @@
 		// Services
 		[Inject] ITimeHelper _timeHelper;
 		[Inject] IFlyIcons _flyIcons;
+		[Inject] IUiNavigator _uiNavigator;
+		
+		SmartButton _button => _view.SmartButton;
 		
 		public void Initialize()
 		{
 			_view.SetState( EPlanetViewState.Locked );
 			_view.SetIcon( _planet.GetIcon( false ) );
 			_view.SetPrice( _planet.Price.ToString() );
-
+			
+			_button.OnClick += TryCollect;
+			_button.OnClick += TryUnlock;
+			_button.OnHold += OnHold;
 			_planet.OnUnlocked += OnProgress;
 			_planet.OnIncomeReady += HandleIncomeReady;
 			_planet.OnIncomeTimeChanged += UpdateProgressTick;
@@ -31,12 +38,34 @@
 
 		public void Dispose()
 		{
+			_button.OnClick -= TryCollect;
+			_button.OnClick -= TryUnlock;
+			_button.OnHold -= OnHold;
 			_planet.OnUnlocked -= OnProgress;
 			_planet.OnIncomeReady -= HandleIncomeReady;
 			_planet.OnIncomeTimeChanged -= UpdateProgressTick;
 			_planet.OnGathered -= OnGathered;
 		}
 
+		void TryCollect()
+		{
+			if (!_planet.IsIncomeReady)
+				return;
+			
+			_planet.GatherIncome();
+		}
+
+		void TryUnlock()
+		{
+			if (_planet.CanUnlock)
+				_planet.Unlock();
+		}
+
+		void OnHold()
+		{
+			_uiNavigator.Show( new PlanetUi(_planet) );
+		}
+		
 		void HandleIncomeReady(bool isReady)
 		{
 			if (isReady)

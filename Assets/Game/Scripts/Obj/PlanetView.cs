@@ -1,5 +1,6 @@
 ﻿namespace Game.Obj
 {
+	using Modules.UI;
 	using TMPro;
 	using UnityEngine;
 	using UnityEngine.UI;
@@ -16,6 +17,7 @@
 	public interface IPlanetView
 	{
 		Vector3 Coin { get; }
+		SmartButton SmartButton { get; }
 		
 		void SetState(EPlanetViewState state);
 		void SetProgress(float progress, string label);
@@ -36,6 +38,8 @@
 		[SerializeField] Image _progressBar;
 		[SerializeField] TextMeshProUGUI _progressText;
 
+		[field: SerializeField] public SmartButton SmartButton { get; private set; }
+		
 		public Vector3 Coin => _coinParent.transform.position;
 
 		public void SetState( EPlanetViewState state )

@@ -19,10 +19,6 @@
 				.AsSingle();
 			
 			Container
-				.BindInterfacesTo<PlanetController>()
-				.AsSingle();
-			
-			Container
 				.Bind<SmartButton>()
 				.FromComponentInHierarchy()
 				.AsSingle();
