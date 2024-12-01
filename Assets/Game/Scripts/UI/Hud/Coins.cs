@@ -33,8 +33,6 @@
 		{
 			_storage.OnMoneySpent -= OnChanged;
 		}
-
-#region ICoins
 		
 		public IReadOnlyReactiveProperty<int> Showing { get; private set; }
 		
@@ -42,8 +40,6 @@
 		{
 			_hidden.Value = coins;
 		}
-
-#endregion 		
 
 		void OnChanged(int newValue, int oldValue)
 		{

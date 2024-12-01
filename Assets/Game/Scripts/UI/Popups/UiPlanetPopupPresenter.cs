@@ -30,7 +30,7 @@
 		{
 			// Open
 			_navigator
-				.OnOpen<PlanetUi>()
+				.OnShow<PlanetUi>()
 				.Subscribe(m => OnShow( m.Planet ))
 				.AddTo(_lifetimeDisposables);
 			

@@ -18,7 +18,7 @@
 		{
 			// Open
 			_uiNavigator
-				.OnOpen<CoinsUi>()
+				.OnShow<CoinsUi>()
 				.Subscribe(m => _coinsView.ShowHide( true ) )
 				.AddTo(_disposables);
 			

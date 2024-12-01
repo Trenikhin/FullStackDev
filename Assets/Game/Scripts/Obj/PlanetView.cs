@@ -50,7 +50,6 @@
 			_coinParent.SetActive( state == EPlanetViewState.Ready );
 		}
 		
-				
 		public void SetProgress(float progress, string label)
 		{
 			_progressBar.fillAmount = progress;

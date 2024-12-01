@@ -8,7 +8,7 @@
 	
 	public interface IUiNavigator
 	{
-		IObservable<T> OnOpen<T>();
+		IObservable<T> OnShow<T>();
 		IObservable<T> OnHide<T>();
 		
 		void Show<T>( T ui ) where T : IUi;
@@ -24,7 +24,7 @@
 			Show( new CoinsUi() );
 		}
 		
-		public IObservable<T> OnOpen<T>() 
+		public IObservable<T> OnShow<T>() 
 		{
 			return _open
 				.ObserveAdd()
