@@ -16,36 +16,18 @@
 		}
 	}
 
-	public class UiPlanetPopupPresenter : IInitializable, IDisposable
+	public class UiPlanetPopupPresenter : IShowingPresenter<PlanetUi>
 	{
 		[Inject] IUiPlanetPopupView _view;
 		[Inject] IUiNavigator _navigator;
 		
 		IPlanet _planet;
 		
-		CompositeDisposable _lifetimeDisposables = new ();
 		CompositeDisposable _showDisposables = new ();
 		
-		public void Initialize()
+		protected override void OnShow( PlanetUi ui )
 		{
-			// Open
-			_navigator
-				.OnShow<PlanetUi>()
-				.Subscribe(m => OnShow( m.Planet ))
-				.AddTo(_lifetimeDisposables);
-			
-			// Close
-			_navigator
-				.OnHide<PlanetUi>()
-				.Subscribe(m => OnHide())
-				.AddTo(_lifetimeDisposables);
-		}
-		
-		public void Dispose() => _lifetimeDisposables?.Dispose();
-		
-		void OnShow( IPlanet planet )
-		{
-			_planet = planet;
+			_planet = ui.Planet;
 			_showDisposables = new CompositeDisposable();
 			
 			_view.ShowHide( true );
@@ -56,7 +38,7 @@
 			
 			// On Close Click
 			_view.OnCloseClicked
-				.Subscribe(_ => _navigator.Hide<PlanetUi>() )
+				.Subscribe(_ => Hide() )
 				.AddTo(_showDisposables);
 			
 			// On Upgrade Click
@@ -66,7 +48,7 @@
 				.AddTo( _showDisposables );
 		}
 		
-		void OnHide()
+		protected override void OnHide()
 		{
 			_showDisposables.Dispose();
 			_planet.OnUpgraded -= OnUpgraded;

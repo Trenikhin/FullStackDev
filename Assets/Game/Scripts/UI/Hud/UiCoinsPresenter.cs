@@ -1,32 +1,22 @@
 ﻿namespace Game.UI
 {
-	using System;
 	using UniRx;
 	using Zenject;
 
 	public class CoinsUi : IUi {}
 	
-	public class UiCoinsPresenter : IInitializable, IDisposable
+	public class UiCoinsPresenter : IShowingPresenter<CoinsUi>
 	{
 		[Inject] ICoins _coins;
 		[Inject] ICoinsView _coinsView;
-		[Inject] IUiNavigator _uiNavigator;
 		
 		CompositeDisposable _disposables = new ();
-		
-		public void Initialize()
+
+		protected override void OnShow(CoinsUi arg)
 		{
-			// Open
-			_uiNavigator
-				.OnShow<CoinsUi>()
-				.Subscribe(m => _coinsView.ShowHide( true ) )
-				.AddTo(_disposables);
+			_disposables = new ();
 			
-			// Close
-			_uiNavigator
-				.OnHide<CoinsUi>()
-				.Subscribe(m => _coinsView.ShowHide( false )  )
-				.AddTo(_disposables);
+			_coinsView.ShowHide( true );
 			
 			// Update coins
 			_coins.Showing
@@ -34,6 +24,11 @@
 				.AddTo(_disposables);
 		}
 		
-		public void Dispose() => _disposables?.Dispose();
+		protected override void OnHide()
+		{
+			_coinsView.ShowHide( false );
+			
+			_disposables?.Dispose();
+		}
 	}
 }
