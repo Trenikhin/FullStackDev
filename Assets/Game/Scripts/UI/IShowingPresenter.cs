@@ -24,12 +24,12 @@
 				.Subscribe(m => OnHide() )
 				.AddTo(_lifetimeDisposables);
 		}
-
-		public void Hide() => _uiNavigator.Hide<T>();
+		
+		public void Dispose() => _lifetimeDisposables?.Dispose();
 		
 		protected abstract void OnShow(T arg);
 		protected abstract void OnHide();
 
-		public void Dispose() => _lifetimeDisposables?.Dispose();
+		protected void Hide() => _uiNavigator.Hide<T>();
 	}
 }
