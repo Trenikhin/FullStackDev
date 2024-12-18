@@ -24,12 +24,7 @@ namespace Game.Gameplay
                 .NonLazy();
             
             this.Container
-                .BindInterfacesTo<Coins>()
-                .AsSingle()
-                .NonLazy();
-            
-            this.Container
-                .BindInterfacesTo<UiCoinsPresenter>()
+                .BindInterfacesTo<CoinsPresenter>()
                 .AsSingle()
                 .NonLazy();
             

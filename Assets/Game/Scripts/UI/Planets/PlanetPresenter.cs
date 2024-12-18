@@ -1,50 +1,55 @@
-﻿namespace Game.Obj
+﻿namespace Game.UI
 {
 	using System;
+	using Modules.Money;
 	using Modules.Planets;
-	using Modules.UI;
-	using Services;
 	using UI;
+	using UniRx;
 	using UnityEngine;
 	using Zenject;
 
 	public class PlanetPresenter : IInitializable, IDisposable
 	{
-		// Obj
 		[Inject] IPlanet _planet;
 		[Inject] IPlanetView _view;
+		[Inject] IMoneyStorage _storage;
+		[Inject] IPlanetShower _popShower;
 		
-		// Services
-		[Inject] ITimeHelper _timeHelper;
-		[Inject] IFlyIcons _flyIcons;
-		[Inject] IUiNavigator _uiNavigator;
-		
-		SmartButton _button => _view.SmartButton;
+		CompositeDisposable _disposables = new ();
 		
 		public void Initialize()
 		{
+			_view.ActivateCoin( false );
 			_view.SetState( EPlanetViewState.Locked );
 			_view.SetIcon( _planet.GetIcon( false ) );
 			_view.SetPrice( _planet.Price.ToString() );
+
+			_view.OnClick
+				.Subscribe(_ =>
+				{
+					TryCollect();
+					TryUnlock();
+				} )
+				.AddTo( _disposables );
+		
+			_view.OnHold
+				.Subscribe(_ => OpenPopup())
+				.AddTo( _disposables );
 			
-			_button.OnClick += TryCollect;
-			_button.OnClick += TryUnlock;
-			_button.OnHold += OnHold;
 			_planet.OnUnlocked += OnProgress;
 			_planet.OnIncomeReady += HandleIncomeReady;
 			_planet.OnIncomeTimeChanged += UpdateProgressTick;
-			_planet.OnGathered += OnGathered;
+			_planet.OnGathered += OnCoinCollected;
 		}
 
 		public void Dispose()
 		{
-			_button.OnClick -= TryCollect;
-			_button.OnClick -= TryUnlock;
-			_button.OnHold -= OnHold;
+			_disposables?.Dispose();
+			
 			_planet.OnUnlocked -= OnProgress;
 			_planet.OnIncomeReady -= HandleIncomeReady;
 			_planet.OnIncomeTimeChanged -= UpdateProgressTick;
-			_planet.OnGathered -= OnGathered;
+			_planet.OnGathered -= OnCoinCollected;
 		}
 
 		void TryCollect()
@@ -57,13 +62,13 @@
 
 		void TryUnlock()
 		{
-			if (_planet.CanUnlock)
+			if (_planet.MaxLevel > _planet.Level && _planet.CanUnlock)
 				_planet.Unlock();
 		}
 
-		void OnHold()
+		void OpenPopup()
 		{
-			_uiNavigator.Show( new PlanetUi(_planet) );
+			_popShower.Show( _planet );
 		}
 		
 		void HandleIncomeReady(bool isReady)
@@ -79,23 +84,30 @@
 			_view.SetState( EPlanetViewState.InProgress );
 			_view.SetIcon( _planet.GetIcon( true ) );
 		}
-		
-		void OnGathered(int delta)
-		{
-			_flyIcons.Fly(_view.Coin, delta );
-		}
 
 		void UpdateProgressTick( float progress )
 		{
-			var time = _timeHelper.SecondsToTxt(progress);
-			
-			_view.SetProgress( _planet.IncomeProgress, time );
+			_view.SetProgress( _planet.IncomeProgress, FormatTime(progress) );
 		}
 
 		void OnReady()
 		{
+			_view.ActivateCoin( true );
 			_view.SetState( EPlanetViewState.Ready );
 			_view.SetIcon( _planet.GetIcon( true ) );
+		}
+		
+		void OnCoinCollected(int delta)
+		{
+			_view.AnimateCoinsFly( _storage.Money - delta, _storage.Money );
+		}
+		
+		string FormatTime(float seconds)
+		{
+			int minutes = Mathf.FloorToInt(seconds / 60);
+			int remainingSeconds = Mathf.FloorToInt(seconds % 60);
+        
+			return $"{minutes:D1}m:{remainingSeconds:D2}s";
 		}
 	}
 }

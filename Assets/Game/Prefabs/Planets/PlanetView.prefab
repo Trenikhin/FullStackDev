@@ -443,9 +443,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1226517422905731925}
   - component: {fileID: 7486801599208217449}
-  - component: {fileID: 5770346779474837613}
-  - component: {fileID: 3888832446643482896}
   - component: {fileID: 7983575472790411147}
+  - component: {fileID: 1651627468811594844}
+  - component: {fileID: 7050105488009480892}
   m_Layer: 5
   m_Name: PlanetView
   m_TagString: Untagged
@@ -485,37 +485,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1080244410604157239}
   m_CullTransparentMesh: 1
---- !u!114 &5770346779474837613
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1080244410604157239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _scriptableObjectInstallers: []
-  _monoInstallers:
-  - {fileID: 3888832446643482896}
-  _installerPrefabs: []
-  _autoRun: 1
-  _kernel: {fileID: 0}
---- !u!114 &3888832446643482896
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1080244410604157239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ae1da468a3e4d1b9c731f3cea903317, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _config: {fileID: 11400000, guid: 15e65e6f39d251d4ba9636b335fd7ff7, type: 2}
 --- !u!114 &7983575472790411147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -536,7 +505,38 @@ MonoBehaviour:
   _unlockPriceText: {fileID: 5444377921757551026}
   _progressBar: {fileID: 6948507870913343312}
   _progressText: {fileID: 8019802931863089282}
-  <SmartButton>k__BackingField: {fileID: 5583372068559771244}
+  _smartButton: {fileID: 5583372068559771244}
+--- !u!114 &1651627468811594844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1080244410604157239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ae1da468a3e4d1b9c731f3cea903317, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _planetIndex: 0
+--- !u!114 &7050105488009480892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1080244410604157239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 1651627468811594844}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
 --- !u!1 &5564512366540979095
 GameObject:
   m_ObjectHideFlags: 0

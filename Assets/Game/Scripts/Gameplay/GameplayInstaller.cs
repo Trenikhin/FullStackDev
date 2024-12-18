@@ -16,7 +16,7 @@ namespace Gameplay
         public override void InstallBindings()
         {
             MoneyInstaller.Install(this.Container, _initialMoney);
-            PlanetInstaller.Install(this.Container, _catalog);
+            PlanetsInstaller.Install(this.Container, _catalog);
         }
     }
 }

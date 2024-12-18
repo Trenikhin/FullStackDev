@@ -1,32 +1,40 @@
 ﻿namespace Game.UI
 {
-	using Services;
+	using Modules.Planets;
+	using Modules.UI;
+	using UnityEngine;
 	using Zenject;
 
 	public class UiInstaller : MonoInstaller
 	{
+		[SerializeField] Transform _planetsContainer;
+		[SerializeField] PlanetView _planetTemplate;
+		
+		[Inject] IPlanet[] _planets;
+		
 		public override void InstallBindings()
 		{
-			Container
-				.BindInterfacesTo<UiNavigator>()
-				.AsSingle();
+			InstallPlanetUi();
 			
 			Container
-				.BindInterfacesTo<UiPlanetPopupPresenter>()
-				.AsSingle();
-			
-			Container
-				.BindInterfacesTo<UiPlanetPopupView>()
+				.Bind<ParticleAnimator>()
 				.FromComponentInHierarchy()
 				.AsSingle();
-			
+		}
+
+		void InstallPlanetUi()
+		{
 			Container
-				.BindInterfacesTo<FlyCoins>()
-				.FromComponentInHierarchy()
+				.BindInterfacesTo<PlanetShower>()
 				.AsSingle();
 			
 			Container
-				.BindInterfacesTo<TimeHelper>()
+				.BindInterfacesAndSelfTo<PlanetPopupPresenter>()
+				.AsSingle();
+			
+			Container
+				.BindInterfacesAndSelfTo<PlanetPopupView>()
+				.FromComponentInHierarchy()
 				.AsSingle();
 		}
 	}

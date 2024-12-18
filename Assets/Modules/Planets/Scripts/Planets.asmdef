@@ -2,7 +2,9 @@
     "name": "Planets",
     "rootNamespace": "",
     "references": [
-        "Utils"
+        "Utils",
+        "UnityEditor.UI",
+        "UnityEngine.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
