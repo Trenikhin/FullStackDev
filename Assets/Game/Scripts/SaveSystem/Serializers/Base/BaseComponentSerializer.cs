@@ -3,54 +3,48 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using Modules.Entities;
 	using Sirenix.Serialization;
 	using Sirenix.Utilities;
-	using Modules.Entities;
 	using UnityEngine;
 	using Zenject;
 
-	public interface ISerializeHelper
+	public interface ISerializer
 	{
-		void Serialize<TComponent, TParams>
-		(
-			string id,
-			Dictionary<string, string> data,
-			Func<TComponent, TParams> valueSelector
-		) where TComponent : Component;
-		
-		void Deserialize<TComponent, TData>
-		(
-			string id,
-			Dictionary<string, string> data,
-			Action<(TComponent obj, TData data)> callback
-		);
+		void Serialize(Dictionary<string, string> data);
+		void Deserialize(Dictionary<string, string> data);
 	}
 	
-	public class SerializeHelper : ISerializeHelper
+	public abstract class BaseComponentSerializer<TComponent, TData> : ISerializer
+	where TComponent : Component
 	{
 		[Inject] EntityWorld _entityWorld;
 
-		bool _dontCache; // Enable/ Disable caching
+		bool _dontCache = true; // Enable/ Disable caching
 		Dictionary<int, Dictionary< Type, Component >> _cachedComponents = new ();
 		
-		public void Serialize<T, TParams>(string id, Dictionary<string, string> data, Func<T, TParams> valueSelector)
-		where T : Component
+		protected virtual string Key => typeof(TComponent).Name;
+
+		public void Serialize(Dictionary<string, string> data)
 		{
-			var components = GetWorldComponents<T>()
-				.ToDictionary(d => d.Item1, d => valueSelector(d.Item2));
-			
-			Serialize(data, components, id);
+			var components = GetWorldComponents<TComponent>()
+				.ToDictionary(d => d.Item1, d => Get(d.Item2));
+
+			Serialize(data, components, Key);
 		}
 
-		public void Deserialize<TObj, TData>(string id, Dictionary<string, string> data, Action<(TObj, TData)> callback)
+		public void Deserialize(Dictionary<string, string> data)
 		{
-			if (!data.TryGetValue(id, out string d))
+			if (!data.TryGetValue(Key, out string d))
 				return;
 					
 			Deserialize<TData>(d)
-				.Select(c => (_entityWorld.Get(c.Key).GetComponent<TObj>(), c.Value))
-				.ForEach( v => callback(v) );
+				.Select(c => (_entityWorld.Get(c.Key).GetComponent<TComponent>(), c.Value))
+				.ForEach( v => Set(v.Item1, v.Item2) );
 		}
+
+		protected abstract TData Get( TComponent component );
+		protected abstract void Set( TComponent component, TData data );
 
 		IEnumerable<(int, T)> GetWorldComponents<T>() where T : Component
 		{

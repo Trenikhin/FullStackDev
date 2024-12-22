@@ -12,25 +12,39 @@
 	{
 		public static string Uri = "http://127.0.0.1:8888";
 		
-		public static async UniTask<string> Get()
+		public static async UniTask< (bool isCucceed, string json) > Get( int ver )
 		{
 			// Get remote data
-			UnityWebRequest request = UnityWebRequest.Get($"{Uri}/load?version=1");
-			await request.SendWebRequest();
+			UnityWebRequest request = UnityWebRequest.Get($"{Uri}/load?version={ver}");
+			
+			try
+			{
+				await request.SendWebRequest();
+				if (request.result != UnityWebRequest.Result.Success)
+					return (false, null);
+			}
+			catch
+			{
+				return (false, null);
+			}
+
 			string json = request.downloadHandler.text;
-			//var bytes = Convert.FromBase64String(json);
-			//var saveData = SerializationUtility.DeserializeValue<Dictionary<string, string>>(bytes, DataFormat.Binary);
-			return  json;
+			return json == null ? (false, null) : (true, json);
 		}
 		
-		public static async UniTask Set(string json)
+		public static async UniTask Set(string json, int ver)
 		{
-			// Serialize
-			//var json = Convert.ToBase64String(SerializationUtility.SerializeValue(data, DataFormat.Binary));
-			
 			// Send
-			UnityWebRequest request = UnityWebRequest.Put($"{Uri}/save?version=1", json);
-			await request.SendWebRequest();
+			UnityWebRequest request = UnityWebRequest.Put($"{Uri}/save?version={ver}", json);
+			
+			try
+			{
+				await request.SendWebRequest();
+			}
+			catch
+			{
+				await UniTask.CompletedTask;
+			}
 		}
 	}
 }

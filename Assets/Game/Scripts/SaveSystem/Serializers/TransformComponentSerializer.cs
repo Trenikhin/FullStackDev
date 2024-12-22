@@ -2,7 +2,7 @@
 {
 	using UnityEngine;
 
-	public class TransformSerializer : BaseSerializer< Transform, (Vector3 pos, Quaternion rotation) >
+	public class TransformComponentSerializer : BaseComponentSerializer< Transform, (Vector3 pos, Quaternion rotation) >
 	{
 		protected override (Vector3 pos, Quaternion rotation) Get(Transform component)
 		{

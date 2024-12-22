@@ -2,7 +2,7 @@
 {
 	using SampleGame.Gameplay;
 	
-	public class CountdownSerializer : BaseSerializer<Countdown, float>
+	public class CountdownComponentSerializer : BaseComponentSerializer<Countdown, float>
 	{
 		protected override float Get(Countdown component)
 		{

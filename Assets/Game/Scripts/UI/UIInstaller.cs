@@ -2,8 +2,6 @@ using Zenject;
 
 namespace Game.Gameplay
 {
-    using SaveSystem;
-
     //Don't modify
     public sealed class UIInstaller : MonoInstaller
     {

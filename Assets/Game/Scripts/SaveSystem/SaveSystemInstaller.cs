@@ -8,7 +8,6 @@
 		public override void InstallBindings()
 		{
 			Container.BindInterfacesTo<Saver>().AsSingle();
-			Container.BindInterfacesTo<SerializeHelper>().AsSingle();
 			Container.BindInterfacesTo<GameRepository>().AsSingle();
 			
 			InstallSerializers();
@@ -16,10 +15,10 @@
 		
 		void InstallSerializers()
 		{
-			BindSerializer<CountdownSerializer>();
-			BindSerializer<DestinationSerializer>();
-			BindSerializer<BagSerializer>();
-			BindSerializer<TransformSerializer>();
+			BindSerializer<CountdownComponentSerializer>();
+			BindSerializer<DestinationComponentSerializer>();
+			BindSerializer<BagComponentSerializer>();
+			BindSerializer<TransformComponentSerializer>();
 		}
 		
 		void BindSerializer<TSerializer>()

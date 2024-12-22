@@ -3,6 +3,7 @@ namespace Game.Gameplay
     using System;
     using Cysharp.Threading.Tasks;
     using SaveSystem;
+    using UnityEngine;
     using Zenject;
     
     public sealed class ControlsPresenter : IControlsPresenter
@@ -27,8 +28,9 @@ namespace Game.Gameplay
         
         async UniTaskVoid LoadAsync( string ver, Action<bool, int> callback )
         {
-            await _saver.LoadAsync( int.Parse( ver ) );
-            callback.Invoke(true, _saver.LastSaveVersion);
+            int verNum = int.TryParse(ver, out verNum) ? verNum : 1;
+            await _saver.LoadAsync( verNum );
+            callback.Invoke(true, verNum);
         }
     }
 }

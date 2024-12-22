@@ -3,7 +3,7 @@
 	using SampleGame.Gameplay;
 	using UnityEngine;
 		
-	public class DestinationSerializer : BaseSerializer<DestinationPoint, Vector3>
+	public class DestinationComponentSerializer : BaseComponentSerializer<DestinationPoint, Vector3>
 	{
 		protected override Vector3 Get(DestinationPoint component)
 		{

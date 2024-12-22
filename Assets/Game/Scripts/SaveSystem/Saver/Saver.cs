@@ -6,6 +6,14 @@
 	using UnityEngine;
 	using Zenject;
 
+	public interface ISaver
+	{
+		int LastSaveVersion { get; }
+		
+		UniTask SaveAsync();
+		UniTask LoadAsync( int ver );
+	}
+	
 	public class Saver : ISaver
 	{
 		[Inject] ISerializer[] _serializers;
@@ -21,15 +29,15 @@
 			
 			_serializers.ForEach(s => s.Serialize(data));
 			
-			await _gameRepository.Set( data );
-			
 			// Set cur save ver
 			PlayerPrefs.SetInt(_ver, PlayerPrefs.GetInt(_ver) + 1);
+			
+			await _gameRepository.Set( data, LastSaveVersion );
 		}
 
 		public async UniTask LoadAsync( int ver )
 		{
-			var data = await _gameRepository.Get();;
+			var data = await _gameRepository.Get( ver );
 			
 			_serializers.ForEach(s => s.Deserialize(data));
 		}
