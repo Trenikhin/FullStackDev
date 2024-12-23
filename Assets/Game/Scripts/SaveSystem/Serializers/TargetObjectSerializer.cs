@@ -4,7 +4,7 @@
 	using SampleGame.Gameplay;
 	using Zenject;
 
-	public class TargetSerializer : BaseComponentSerializer<TargetObject, int>
+	public class TargetObjectSerializer : BaseComponentSerializer<TargetObject, int>
 	{
 		[Inject] EntityWorld _world;
 		

@@ -20,10 +20,6 @@ public static class SerializerGenerator
 		{
 			Directory.CreateDirectory(path);
 		}
-		else
-		{
-			//return;
-		}
 
 		foreach (var c in classes)
 		{
@@ -33,26 +29,32 @@ public static class SerializerGenerator
 	using SampleGame.Common;
 	using SampleGame.Gameplay;
 	
-	public class ExampleSerializer : BaseComponentSerializer<SomeComponent, SomeData >
+	public class ExampleSerializer : BaseComponentSerializer<SomeComponent, object >
 	{
-		protected override SomeData Get(SomeComponent component)
+		protected override object Get(SomeComponent component)
 		{
-			
+			return null;
 		}
 		
-		protected override void Set(SomeComponent component, SomeData data)
+		protected override void Set(SomeComponent component, object data)
 		{
 			
 		}
 	}
 };";
-		
+			
+			string baseClassName = @"\bExampleSerializer\b";
 			string newClassName = $"{c.Key.Name}Serializer";
-			string pattern = @"\bExampleSerializer\b"; // Match "class ExampleSerializer"
-			string replacement = $"{newClassName}";
-		
-			generatedCode = Regex.Replace(generatedCode, pattern, replacement);
-		
+			string baseComponent = @"\SomeComponent\b"; 
+			string newComponent = $"{c.Key.Name}";
+			
+			generatedCode = Regex.Replace(generatedCode, baseClassName, newClassName);
+			generatedCode = Regex.Replace(generatedCode, baseComponent, newComponent);
+
+			var classPath = Path.Combine(path, $"{newClassName}.cs");
+			if (File.Exists(classPath))
+				continue;
+			
 			File.WriteAllText(Path.Combine(path, $"{newClassName}.cs"), generatedCode);
 			AssetDatabase.Refresh();
 		}
@@ -83,7 +85,6 @@ public static class VariableFinder
 				
                 foreach (var property in properties)
                 {
-                    var attribute = (VariableAttribute)Attribute.GetCustomAttribute(property, typeof(VariableAttribute));
                     if (!classes.ContainsKey(type))
 	                    classes.Add(type, new HashSet<PropertyInfo>());
                    

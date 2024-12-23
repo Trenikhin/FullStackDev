@@ -19,12 +19,12 @@
 			BindSerializer<WorldSerializer>();
 			
 			// Component Serializers
-			BindSerializer<BagSerializer>();
+			BindSerializer<ResourceBagSerializer>();
 			BindSerializer<CountdownSerializer>();
-			BindSerializer<DestinationSerializer>();
+			BindSerializer<DestinationPointSerializer>();
 			BindSerializer<HealthSerializer>();
 			BindSerializer<ProductionOrderSerializer>();
-			BindSerializer<TargetSerializer>();
+			BindSerializer<TargetObjectSerializer>();
 			BindSerializer<TeamSerializer>();
 			BindSerializer<TransformSerializer>();
 		}

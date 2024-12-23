@@ -3,7 +3,7 @@
 	using SampleGame.Common;
 	using SampleGame.Gameplay;
 	
-	public class BagSerializer : BaseComponentSerializer<ResourceBag, (ResourceType type, int cur) >
+	public class ResourceBagSerializer : BaseComponentSerializer<ResourceBag, (ResourceType type, int cur) >
 	{
 		protected override (ResourceType, int) Get(ResourceBag component)
 		{
