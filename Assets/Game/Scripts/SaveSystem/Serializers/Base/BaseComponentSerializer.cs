@@ -19,26 +19,29 @@
 	where TComponent : Component
 	{
 		[Inject] EntityWorld _entityWorld;
-
-		bool _dontCache = true; // Enable/ Disable caching
+		[Inject] ISerializeHelper _serializer;
+		
+		bool _dontCache; // Enable/ Disable caching
 		Dictionary<int, Dictionary< Type, Component >> _cachedComponents = new ();
 		
-		protected virtual string Key => typeof(TComponent).Name;
+		protected virtual string _key => typeof(TComponent).Name;
 
 		public void Serialize(Dictionary<string, string> data)
 		{
 			var components = GetWorldComponents<TComponent>()
 				.ToDictionary(d => d.Item1, d => Get(d.Item2));
-
-			Serialize(data, components, Key);
+			
+			data[_key] = _serializer.Serialize(components);;
 		}
 
 		public void Deserialize(Dictionary<string, string> data)
 		{
-			if (!data.TryGetValue(Key, out string d))
+			if (!data.TryGetValue(_key, out string d))
 				return;
 					
-			Deserialize<TData>(d)
+			var deserialized = _serializer.Deserialize<Dictionary<int, TData>>(d);
+			
+			deserialized
 				.Select(c => (_entityWorld.Get(c.Key).GetComponent<TComponent>(), c.Value))
 				.ForEach( v => Set(v.Item1, v.Item2) );
 		}
@@ -52,20 +55,6 @@
 				.GetAll()
 				.Select(e => (e.Id, GetComponent<T>( e.Id, e )))
 				.Where(d => d.Item2 != null);
-		}
-		
-		void Serialize<T>( Dictionary<string, string> data, T components, string id )
-		{
-			byte[] bytes = SerializationUtility.SerializeValue(components, DataFormat.Binary);
-			
-			data[id] = Convert.ToBase64String(bytes);
-		}
-
-		Dictionary<int, T> Deserialize<T>( string data )
-		{
-			byte[] bytes = Convert.FromBase64String(data);
-			
-			return SerializationUtility.DeserializeValue<Dictionary<int, T>>(bytes, DataFormat.Binary);
 		}
 		
 		T GetComponent<T>(int objectId, Entity entity) where T : Component

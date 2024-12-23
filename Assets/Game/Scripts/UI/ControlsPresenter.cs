@@ -22,15 +22,16 @@ namespace Game.Gameplay
         
         async UniTaskVoid SaveAsync( Action<bool, int> callback )
         {
-            await _saver.SaveAsync();
-            callback.Invoke(true, _saver.LastSaveVersion);
+            var res = await _saver.SaveAsync();
+            callback.Invoke(res, _saver.LastSaveVersion);
         }
         
         async UniTaskVoid LoadAsync( string ver, Action<bool, int> callback )
         {
             int verNum = int.TryParse(ver, out verNum) ? verNum : 1;
-            await _saver.LoadAsync( verNum );
-            callback.Invoke(true, verNum);
+            var res = await _saver.LoadAsync( verNum );
+            
+            callback.Invoke(res, verNum);
         }
     }
 }

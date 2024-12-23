@@ -1,21 +1,16 @@
 ﻿namespace Game.SaveSystem
 {
-	using System;
-	using System.Collections.Generic;
 	using Cysharp.Threading.Tasks;
-	using Sirenix.Serialization;
-	using UnityEngine;
 	using UnityEngine.Networking;
-	using Zenject;
 
 	public static class Client
-	{
-		public static string Uri = "http://127.0.0.1:8888";
+	{ 
+		static string _uri = "http://127.0.0.1:8888";
 		
-		public static async UniTask< (bool isCucceed, string json) > Get( int ver )
+		public static async UniTask<(bool isSucceed, string json)> Get( int ver )
 		{
 			// Get remote data
-			UnityWebRequest request = UnityWebRequest.Get($"{Uri}/load?version={ver}");
+			UnityWebRequest request = UnityWebRequest.Get($"{_uri}/load?version={ver}");
 			
 			try
 			{
@@ -32,18 +27,20 @@
 			return json == null ? (false, null) : (true, json);
 		}
 		
-		public static async UniTask Set(string json, int ver)
+		public static async UniTask<bool> Set(string json, int ver)
 		{
 			// Send
-			UnityWebRequest request = UnityWebRequest.Put($"{Uri}/save?version={ver}", json);
+			UnityWebRequest request = UnityWebRequest.Put($"{_uri}/save?version={ver}", json);
 			
 			try
 			{
 				await request.SendWebRequest();
+				return true;
 			}
 			catch
 			{
 				await UniTask.CompletedTask;
+				return false;
 			}
 		}
 	}
