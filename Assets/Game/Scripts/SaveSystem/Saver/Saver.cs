@@ -40,12 +40,12 @@
 			if (ver > LastSaveVersion)
 				return false;
 				
-			var data = await _gameRepository.Get( ver );
+			var task = await _gameRepository.Get( ver );
 
-			if (!data.isSucceed)
+			if (!task.isSucceed)
 				return false;
 			
-			_serializers.ForEach(s => s.Deserialize(data.data));
+			_serializers.ForEach(s => s.Deserialize(task.data));
 			return true;
 		}
 	}

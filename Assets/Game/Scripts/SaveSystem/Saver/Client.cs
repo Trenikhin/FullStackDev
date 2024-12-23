@@ -4,13 +4,13 @@
 	using UnityEngine.Networking;
 
 	public static class Client
-	{ 
-		static string _uri = "http://127.0.0.1:8888";
-		
+	{
+		const string _uri = "http://127.0.0.1:8888";
+
 		public static async UniTask<(bool isSucceed, string json)> Get( int ver )
 		{
 			// Get remote data
-			UnityWebRequest request = UnityWebRequest.Get($"{_uri}/load?version={ver}");
+			var request = UnityWebRequest.Get($"{_uri}/load?version={ver}");
 			
 			try
 			{
@@ -30,7 +30,7 @@
 		public static async UniTask<bool> Set(string json, int ver)
 		{
 			// Send
-			UnityWebRequest request = UnityWebRequest.Put($"{_uri}/save?version={ver}", json);
+			var request = UnityWebRequest.Put($"{_uri}/save?version={ver}", json);
 			
 			try
 			{
