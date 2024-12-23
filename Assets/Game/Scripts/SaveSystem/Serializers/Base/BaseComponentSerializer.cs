@@ -7,12 +7,6 @@
 	using UnityEngine;
 	using Zenject;
 
-	public interface ISerializer
-	{
-		void Serialize(Dictionary<string, string> data);
-		void Deserialize(Dictionary<string, string> data);
-	}
-	
 	public abstract class BaseComponentSerializer<TComponent, TData> : ISerializer
 	where TComponent : Component
 	{
