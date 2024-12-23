@@ -20,15 +20,15 @@
 		[Inject] ISerializeHelper _serializeHelper;
 		
 		byte[] _aesSalt = { 0x52, 0x41, 0x16, 0x79, 0x86, 0x64, 0x97, 0x22 };
-		string _pass = "1234";
+		const string _pass = "1234";
 		
-		const string _saveTime = "LastSaveTime";
+		const string _saveTime = "saveTime";
 		const string _dataName = "data";
 		
 		public async UniTask<bool> Set(Dictionary<string, string> data, int ver)
 		{
 			// Set save time
-			data[_saveTime] = Convert.ToBase64String(SerializationUtility.SerializeValue(DateTime.UtcNow, DataFormat.Binary));;
+			data[_saveTime] = _serializeHelper.Serialize( DateTime.UtcNow );
 			
 			// Encrypt
 			var encryptedData = Serialize(data);
@@ -47,10 +47,8 @@
 		{
 			// Get remote
 			var remoteResponse = await Client.Get(ver );
-			
 			if(!remoteResponse.isSucceed)
 				return (false, null);
-			
 			var remoteData = Deserialize(remoteResponse.json);
 			
 			// Get local
