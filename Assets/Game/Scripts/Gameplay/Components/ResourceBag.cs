@@ -8,11 +8,11 @@ namespace SampleGame.Gameplay
     //Can be extended
     public sealed class ResourceBag : MonoBehaviour
     {
-        ///Variable
+        [Variable]
         [field: SerializeField]
         public ResourceType Type { get; set; }
         
-        ///Variable
+        [Variable]
         [field: SerializeField]
         public int Current { get; set; }
         

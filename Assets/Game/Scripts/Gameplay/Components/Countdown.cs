@@ -5,7 +5,7 @@ namespace SampleGame.Gameplay
     //Can be extended
     public sealed class Countdown : MonoBehaviour
     {
-        ///Variable
+        [Variable]
         [field: SerializeField]
         public float Current { get; set; }
 

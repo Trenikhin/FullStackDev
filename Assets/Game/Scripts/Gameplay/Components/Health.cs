@@ -5,7 +5,7 @@ namespace SampleGame.Gameplay
     //Can be extended
     public sealed class Health : MonoBehaviour
     {
-        ///Variable
+        [Variable]
         [field: SerializeField]
         public int Current { get; set; } = 50;
 

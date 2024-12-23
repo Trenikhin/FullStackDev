@@ -7,10 +7,10 @@ namespace SampleGame.Gameplay
     //Can be extended
     public sealed class ProductionOrder : MonoBehaviour
     {
-        ///Variable
         [SerializeField]
         private List<EntityConfig> _queue;
-        
+     
+        [Variable]
         public IReadOnlyList<EntityConfig> Queue
         {
             get { return _queue; }
