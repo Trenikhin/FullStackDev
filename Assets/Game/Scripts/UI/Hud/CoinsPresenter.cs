@@ -3,30 +3,64 @@
 	using System;
 	using Modules.Money;
 	using UniRx;
+	using UnityEngine;
 	using Zenject;
+
+	public class EarnData
+	{
+		public Vector3 From;
+		public int Delta;
+	}
 	
 	public class CoinsPresenter : IInitializable, IDisposable
 	{
-		[Inject] ICoinsView _coinsView;
+		[Inject] ICoinsView _view;
 		[Inject] IMoneyStorage _storage;
+		
+		[Inject] IMessageReceiver _receiver;
 		
 		CompositeDisposable _disposables = new ();
 		
+		ReactiveProperty<int> _coins = new(); // Cur in 'Storage'
+		ReactiveProperty<int> _hidden = new(); // Temp hidden
+		
 		public void Initialize()
 		{
-			_coinsView.Text = _storage.Money.ToString();
-			_storage.OnMoneyChanged += Spend;
+			_storage.OnMoneyChanged += OnCoinsChange;
+			_coins.Value = _storage.Money;
+			
+			// Coins Earned
+			_receiver
+				.Receive<EarnData>()
+				.Subscribe( v => OnCoinsEarn(v.From, v.Delta) )
+				.AddTo(_disposables);
+			
+			// Show Coins
+			Observable
+				.CombineLatest
+				( 
+					_coins,
+					_hidden,
+					( c, h ) => c - h
+				)
+				.Subscribe( sc => _view.Text = sc.ToString() )
+				.AddTo(_disposables);
 		}
 
 		public void Dispose()
 		{
-			_storage.OnMoneyChanged -= Spend;
+			_storage.OnMoneyChanged -= OnCoinsChange;
 			_disposables?.Dispose();
 		}
-
-		void Spend(int newValue, int oldValue)
+		
+		void OnCoinsEarn(Vector3 from, int amount)
 		{
-			_coinsView.Text = newValue.ToString();
+			_view.Fly( from, amount, c => _hidden.Value = c);
+		}
+		
+		void OnCoinsChange(int newValue, int oldValue)
+		{
+			_coins.Value = newValue;
 		}
 	}
 }

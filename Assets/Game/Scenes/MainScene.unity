@@ -833,7 +833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97767c5481534cf38a418646e4d81b15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initialMoney: 300
+  _initialMoney: 9999999
   _catalog: {fileID: 11400000, guid: 24135235a5c00425d9bcca105b41c4c4, type: 2}
 --- !u!114 &615309294
 MonoBehaviour:
@@ -1481,6 +1481,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _coinsText: {fileID: 629950165}
+  _coinsParent: {fileID: 751371484}
 --- !u!114 &869750963
 MonoBehaviour:
   m_ObjectHideFlags: 0

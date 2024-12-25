@@ -24,7 +24,8 @@
 		IObservable<Unit> OnClick { get; }
 		IObservable<Unit> OnHold { get; }
 
-		void AnimateCoinsFly(int startCoins, int targetCoins);
+		Vector3 CoinsPos { get; }
+		
 		void SetState(EPlanetViewState state);
 		void ActivateCoin(bool isActive);
 		void SetProgress(float progress, string label);
@@ -63,8 +64,12 @@
 			x => _smartButton.OnHold -= x
 		);
 
-		public Transform Coin => _coinParent.transform;
-		public Transform Transform => transform;
+		public Vector3 CoinsPos => _coinParent.transform.position;
+
+		public void AnimateCoinsFly(int startCoins, int targetCoins)
+		{
+			throw new NotImplementedException();
+		}
 
 		public void SetState( EPlanetViewState state )
 		{
@@ -82,18 +87,6 @@
 		{
 			_progressBar.fillAmount = progress;
 			_progressText.text = label;
-		}
-		
-		public void AnimateCoinsFly( int startCoins, int targetCoins )
-		{
-			ActivateCoin( false );
-			_coinsView.Text = $"{(int)startCoins}";
-			
-			_particleAnimator.Emit( transform.position, _coinsParent.position, 1, () =>
-			{
-				DOVirtual
-					.Float( startCoins, targetCoins, 0.4f, (c) => _coinsView.Text = $"{(int)c}");
-			} );
 		}
 		
 		public void SetIcon( Sprite icon ) => _planetIcon.sprite = icon;

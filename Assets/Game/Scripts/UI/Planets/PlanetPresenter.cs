@@ -12,8 +12,10 @@
 	{
 		[Inject] IPlanet _planet;
 		[Inject] IPlanetView _view;
+		
 		[Inject] IMoneyStorage _storage;
 		[Inject] IPlanetShower _popShower;
+		[Inject] IMessagePublisher _publisher;
 		
 		CompositeDisposable _disposables = new ();
 		
@@ -99,7 +101,13 @@
 		
 		void OnCoinCollected(int delta)
 		{
-			_view.AnimateCoinsFly( _storage.Money - delta, _storage.Money );
+			_view.ActivateCoin( false );
+			
+			_publisher.Publish( new EarnData()
+			{
+				From = _view.CoinsPos,
+				Delta = delta
+			} );
 		}
 		
 		string FormatTime(float seconds)

@@ -2,6 +2,7 @@
 {
 	using Modules.Planets;
 	using Modules.UI;
+	using UniRx;
 	using UnityEngine;
 	using Zenject;
 
@@ -14,6 +15,10 @@
 		
 		public override void InstallBindings()
 		{
+			Container
+				.BindInterfacesTo<MessageBroker>()
+				.AsSingle();
+			
 			InstallPlanetUi();
 			
 			Container

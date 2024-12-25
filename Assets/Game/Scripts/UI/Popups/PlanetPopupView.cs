@@ -23,6 +23,7 @@
 		[SerializeField] Button _backgroundButton;
 
 		[Inject] IPlanetPopupPresenter _presenter;
+		[Inject] IPlanetHider _shower;
 		
 		CompositeDisposable _disposables = new ();
 		
@@ -39,35 +40,49 @@
 		{
 			gameObject.SetActive(true);
 			
+			// Input
 			_onUpgradeClicked
-				.StartWith(Unit.Default)
-				.Subscribe( _ =>
-				{
-					_presenter.TryUpgrade();
-					UpdateView();
-				})
+				.Subscribe( _ => _presenter.TryUpgrade())
 				.AddTo(_disposables);
 			
 			_onCloseClicked
-				.Subscribe( _ => Hide() )
+				.Subscribe( _ => _shower.Hide() )
+				.AddTo(_disposables);
+			
+			// Update View
+			_presenter.Icon
+				.Subscribe( s => _image.sprite = s )
+				.AddTo(_disposables);
+			
+			_presenter.Name
+				.Subscribe( s => _nameTxt.text = s )
+				.AddTo(_disposables);
+			
+			_presenter.Population
+				.Subscribe( s => _populationTxt.text = s )
+				.AddTo(_disposables);
+			
+			_presenter.Level
+				.Subscribe( s => _lvlTxt.text = s )
+				.AddTo(_disposables);
+			
+			_presenter.Income
+				.Subscribe( s => _incomeTxt.text = s )
+				.AddTo(_disposables);
+			
+			_presenter.Price
+				.Subscribe( s => _upgradePriceTxt.text = s )
+				.AddTo(_disposables);
+			
+			_presenter.CanUpgrade
+				.Subscribe( s => _upgradeButton.interactable = s )
 				.AddTo(_disposables);
 		}
 
-		void Hide()
+		public void Hide()
 		{
 			_disposables.Clear();
 			gameObject.SetActive(false);
-		}
-
-		void UpdateView()
-		{
-			 _image.sprite = _presenter.Icon;
-			_nameTxt.text = _presenter.Name;
-			_populationTxt.text = _presenter.Population;
-			_lvlTxt.text = _presenter.Level;
-			_incomeTxt.text = _presenter.Income;
-			_upgradeButton.interactable = _presenter.CanUpgrade;
-			_upgradePriceTxt.text = _presenter.IsMaxLevel ? "MaxLevel" : _presenter.Price;
 		}
 	}
 }
