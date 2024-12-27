@@ -66,11 +66,6 @@
 
 		public Vector3 CoinsPos => _coinParent.transform.position;
 
-		public void AnimateCoinsFly(int startCoins, int targetCoins)
-		{
-			throw new NotImplementedException();
-		}
-
 		public void SetState( EPlanetViewState state )
 		{
 			_lockParent.SetActive( state == EPlanetViewState.Locked );

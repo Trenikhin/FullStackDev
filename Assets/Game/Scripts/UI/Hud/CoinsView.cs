@@ -10,8 +10,9 @@
 	public interface ICoinsView
 	{
 		string Text { set; }
+		Vector3 Position { get; }
 		
-		void Fly(Vector3 pos, int coins, Action<int> onCoinAdded);
+		void Add(int coins, Action<int> onCoinAdded);
 	}
 	
 	public class CoinsView : MonoBehaviour, ICoinsView
@@ -22,14 +23,11 @@
 		[Inject] ParticleAnimator _particleAnimator;
 		
 		public string Text { set => _coinsText.text = value; }
-		
-		public void Fly( Vector3 pos, int coins, Action<int> onCoinAdded )
+		public Vector3 Position => _coinsParent.position;
+
+		public void Add( int coins, Action<int> onCoinAdded )
 		{
-			onCoinAdded(coins);
-			
-			_particleAnimator.Emit( pos, _coinsParent.position, 1, ()
-				=>
-				DOVirtual.Float( coins, 0, 0.4f, c => onCoinAdded((int)c)));
+			DOVirtual.Float(coins, 0, 0.4f, c => onCoinAdded((int)c));
 		}
 	}
 }

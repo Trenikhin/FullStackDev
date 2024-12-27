@@ -2,6 +2,7 @@
 {
 	using System;
 	using Modules.Money;
+	using Modules.UI;
 	using UniRx;
 	using UnityEngine;
 	using Zenject;
@@ -18,6 +19,7 @@
 		[Inject] IMoneyStorage _storage;
 		
 		[Inject] IMessageReceiver _receiver;
+		[Inject] ParticleAnimator _particleAnimator;
 		
 		CompositeDisposable _disposables = new ();
 		
@@ -55,7 +57,11 @@
 		
 		void OnCoinsEarn(Vector3 from, int amount)
 		{
-			_view.Fly( from, amount, c => _hidden.Value = c);
+			_hidden.Value = amount;
+			
+			_particleAnimator.Emit( from, _view.Position, 1, ()
+			=>
+				_view.Add(amount, c => _hidden.Value = c));
 		}
 		
 		void OnCoinsChange(int newValue, int oldValue)
