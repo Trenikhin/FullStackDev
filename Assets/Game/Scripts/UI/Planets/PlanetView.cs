@@ -48,10 +48,6 @@
 		
 		[SerializeField] SmartButton _smartButton;
 		
-		[Inject] ParticleAnimator _particleAnimator;
-		[Inject (Id = "CoinsTransform")] RectTransform _coinsParent;
-		[Inject] ICoinsView _coinsView;
-		
 		public IObservable<Unit> OnClick => Observable.FromEvent
 		(
 			x => _smartButton.OnClick += x,
