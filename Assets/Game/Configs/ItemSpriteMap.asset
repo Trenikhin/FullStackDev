@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c931dd55af64e48aee455dd9ba9e67e, type: 3}
+  m_Name: ItemSpriteMap
+  m_EditorClassIdentifier: 
+  _items:
+  - type: 0
+    baseSprite: {fileID: 0}
+    itemSprite: {fileID: 0}
+    questSprite: {fileID: 0}
+  - type: 1
+    baseSprite: {fileID: 21300000, guid: 901ae49672a8443af981652fda0b8f57, type: 3}
+    itemSprite: {fileID: 21300000, guid: e4c87e181d5024df3b85cc552a6112af, type: 3}
+    questSprite: {fileID: 21300000, guid: b57a603e73e1147ee911ccb77ad7df76, type: 3}
+  - type: 2
+    baseSprite: {fileID: 21300000, guid: 52bbbd0e6bc6840ac84bf1ae158fea18, type: 3}
+    itemSprite: {fileID: 21300000, guid: 1a8a30b5fa57249d891232f654464d37, type: 3}
+    questSprite: {fileID: 21300000, guid: d7ecda434863c474abf82ca7a45d50d4, type: 3}
+  - type: 3
+    baseSprite: {fileID: 21300000, guid: 4f3ab2eb29ad646758bfb5c45eed78a2, type: 3}
+    itemSprite: {fileID: 21300000, guid: 7288df6937bf14cad8ae2959365c49c8, type: 3}
+    questSprite: {fileID: 21300000, guid: 564b58059e96242c6a3aeb21fa61b480, type: 3}
+  - type: 4
+    baseSprite: {fileID: 21300000, guid: 65a7b0d95033b4cb8aae2e0f09bcd959, type: 3}
+    itemSprite: {fileID: 21300000, guid: b7bf1fc7f0d9d4a5198497af274c45ef, type: 3}
+    questSprite: {fileID: 21300000, guid: 7a48c126794ea43cebbc54efa1a0897e, type: 3}
+  - type: 5
+    baseSprite: {fileID: 21300000, guid: c82b11dc6491c48dea83e532e657a446, type: 3}
+    itemSprite: {fileID: 21300000, guid: bfda9249fc9b0422f9bc04de44939d6e, type: 3}
+    questSprite: {fileID: 21300000, guid: 5bc8d3e57fdd7486d9b42f006f1c086c, type: 3}
+  - type: 6
+    baseSprite: {fileID: 21300000, guid: 0def612c77f1e47d1b9072edd32622c6, type: 3}
+    itemSprite: {fileID: 21300000, guid: 0678b7901b5a64910833914f657c9d04, type: 3}
+    questSprite: {fileID: 21300000, guid: ae2324b43323140e096a62ec59d79c5a, type: 3}
