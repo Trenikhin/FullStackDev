@@ -9,9 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6318981597555825327}
+  - component: {fileID: 2672051287306021981}
   - component: {fileID: 790263129781726672}
   - component: {fileID: 8255752769676833144}
   - component: {fileID: 8807684224348490779}
+  - component: {fileID: 7487565680886918444}
+  - component: {fileID: 7849782418118163587}
+  - component: {fileID: 8732528717671869862}
   m_Layer: 6
   m_Name: Lava
   m_TagString: Untagged
@@ -34,6 +38,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2672051287306021981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941354820746825385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4928fdd23cb8401da106b66359b62ee1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _autoComplete: 1
+  _trigger: {fileID: 8732528717671869862}
 --- !u!212 &790263129781726672
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -227,3 +245,45 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7487565680886918444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941354820746825385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af215dc79015445fb5b28fcd229d5453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7849782418118163587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941354820746825385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 2672051287306021981}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
+--- !u!114 &8732528717671869862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941354820746825385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7f2522cb2534ecca041457a2ce0259e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

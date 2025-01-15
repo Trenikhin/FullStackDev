@@ -95,6 +95,10 @@ GameObject:
   - component: {fileID: 3075001735327464809}
   - component: {fileID: 1650171991482105198}
   - component: {fileID: 8320438562223812922}
+  - component: {fileID: 4708504584083211844}
+  - component: {fileID: 7235623103044714224}
+  - component: {fileID: 3422783055838035615}
+  - component: {fileID: 9178323142623422672}
   m_Layer: 8
   m_Name: Trap
   m_TagString: Untagged
@@ -193,3 +197,60 @@ PolygonCollider2D:
       - {x: -0.5644675, y: 0.0016976148}
       - {x: 0.5652342, y: 0.0005790591}
   m_UseDelaunayMesh: 0
+--- !u!114 &4708504584083211844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4331236207197526835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af215dc79015445fb5b28fcd229d5453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7235623103044714224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4331236207197526835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17f3f73e181948e08b13d312c02f13d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _autoComplete: 1
+  _trigger: {fileID: 9178323142623422672}
+  _damage: 20
+--- !u!114 &3422783055838035615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4331236207197526835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 7235623103044714224}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
+--- !u!114 &9178323142623422672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4331236207197526835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7f2522cb2534ecca041457a2ce0259e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

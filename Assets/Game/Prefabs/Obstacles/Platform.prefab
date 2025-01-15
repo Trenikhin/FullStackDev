@@ -11,6 +11,9 @@ GameObject:
   - component: {fileID: 7845036276167105276}
   - component: {fileID: 1599025579162667576}
   - component: {fileID: 4998109996826579298}
+  - component: {fileID: 7025757899082246916}
+  - component: {fileID: 2300407411496004284}
+  - component: {fileID: 695378022628277740}
   m_Layer: 3
   m_Name: <Platform>
   m_TagString: Platform
@@ -106,6 +109,54 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3, y: 0.5}
   m_EdgeRadius: 0
+--- !u!114 &7025757899082246916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240930164425400058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0685998ec36f443e99b7b4bda4f786bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _autoComplete: 1
+  _mover: {fileID: 1599025579162667576}
+  _platform: {fileID: 7845036276167105276}
+  _point1: {fileID: 5434138037557620653}
+  _point2: {fileID: 7441270365842623162}
+  _speed: 5
+--- !u!114 &2300407411496004284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240930164425400058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af215dc79015445fb5b28fcd229d5453, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &695378022628277740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240930164425400058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 7025757899082246916}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
 --- !u!1 &2402534428499199933
 GameObject:
   m_ObjectHideFlags: 0
@@ -115,7 +166,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7441270365842623162}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Waypoint2
   m_TagString: Untagged
   m_Icon: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
@@ -146,7 +197,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5434138037557620653}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Waypoint1
   m_TagString: Untagged
   m_Icon: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
@@ -178,7 +229,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4197703630263784642}
   - component: {fileID: 4653792492173037913}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: <Sprite>
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -261,7 +312,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1736318179580503177}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
